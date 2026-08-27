@@ -1033,6 +1033,24 @@ app.get('/api/admin/download-credentials', (req, res) => {
   res.status(200).send(csvContent);
 });
 
+// IST Timezone Formatter Helper
+function formatTimestampIST(isoString) {
+  if (!isoString) return 'N/A';
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return isoString;
+    return d.toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+  } catch (e) {
+    return new Date(isoString).toLocaleTimeString();
+  }
+}
+
 // Admin Get Candidate Attendance & Participation Summary
 app.get(['/api/admin/candidate-attendance', '/admin/candidate-attendance'], (req, res) => {
   const store = readStore();
@@ -1062,7 +1080,7 @@ app.get(['/api/admin/candidate-attendance', '/admin/candidate-attendance'], (req
       status = 'COMPLETED';
       completedCount++;
       score = `${resultRecord.percentage}% (${resultRecord.score}/${resultRecord.totalQuestions})`;
-      timeInfo = new Date(resultRecord.submittedAt).toLocaleTimeString();
+      timeInfo = formatTimestampIST(resultRecord.submittedAt);
     } else if (activeSession) {
       if (activeSession.status === 'BLOCKED') {
         status = 'BLOCKED';
@@ -1123,7 +1141,7 @@ app.get('/api/admin/download-attendance', (req, res) => {
     if (resultRecord) {
       status = 'COMPLETED';
       score = `${resultRecord.percentage}%`;
-      timeInfo = new Date(resultRecord.submittedAt).toLocaleTimeString();
+      timeInfo = formatTimestampIST(resultRecord.submittedAt);
     } else if (activeSession) {
       status = activeSession.status === 'BLOCKED' ? 'BLOCKED' : 'IN_PROGRESS';
       timeInfo = activeSession.status === 'BLOCKED' ? 'Suspended' : 'Active';
@@ -1198,7 +1216,7 @@ app.get(['/api/admin/results', '/admin/results'], (req, res) => {
       scoreDisplay = `${resultRecord.percentage}% (${resultRecord.score}/${resultRecord.totalQuestions})`;
       durationDisplay = `${Math.floor((resultRecord.timeSpentSeconds || 0) / 60)}m ${(resultRecord.timeSpentSeconds || 0) % 60}s`;
       violationsCount = resultRecord.violationsCount || 0;
-      submittedAtDisplay = new Date(resultRecord.submittedAt).toLocaleTimeString();
+      submittedAtDisplay = formatTimestampIST(resultRecord.submittedAt);
       quizTitle = resultRecord.quizTitle || 'Assessment';
       resultId = resultRecord.id;
     } else if (activeSession) {

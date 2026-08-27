@@ -152,7 +152,7 @@ function broadcastToStudent(username, data) {
 // --- REST API ENDPOINTS ---
 
 // 1. Student Auth (Flexible login by Username, Register Number, or Email)
-app.post('/api/auth/student-login', (req, res) => {
+app.post(['/api/auth/student-login', '/auth/student-login', '/api/student-login'], (req, res) => {
   const { username, password } = req.body;
   const store = readStore();
   const inputUser = (username || '').trim().toLowerCase();
@@ -187,7 +187,7 @@ app.post('/api/auth/student-login', (req, res) => {
 });
 
 // 2. Admin Auth
-app.post('/api/auth/admin-login', (req, res) => {
+app.post(['/api/auth/admin-login', '/auth/admin-login', '/api/admin-login'], (req, res) => {
   const { username, password } = req.body;
   const store = readStore();
   const inputUser = (username || '').trim().toLowerCase();
@@ -204,7 +204,7 @@ app.post('/api/auth/admin-login', (req, res) => {
 });
 
 // 3. Get Quizzes
-app.get('/api/quizzes', (req, res) => {
+app.get(['/api/quizzes', '/quizzes'], (req, res) => {
   const store = readStore();
   res.json(store.quizzes.map(q => ({
     id: q.id,
@@ -274,7 +274,7 @@ function shuffleArray(array) {
 }
 
 // 4. Student Starts Exam (Per-Candidate Jumbled Question & Option Order)
-app.post('/api/exam/start', (req, res) => {
+app.post(['/api/exam/start', '/exam/start'], (req, res) => {
   const { username, quizId } = req.body;
   const store = readStore();
 
@@ -352,7 +352,7 @@ app.post('/api/exam/start', (req, res) => {
 });
 
 // 5. Exam Incident Logger & Lockout Trigger
-app.post('/api/exam/incident', (req, res) => {
+app.post(['/api/exam/incident', '/exam/incident'], (req, res) => {
   const { username, quizId, violationType, details } = req.body;
   const store = readStore();
   const sessionKey = `${username}_${quizId}`;
@@ -404,7 +404,7 @@ app.post('/api/exam/incident', (req, res) => {
 });
 
 // 6. Student Exam Submit
-app.post('/api/exam/submit', (req, res) => {
+app.post(['/api/exam/submit', '/exam/submit'], (req, res) => {
   const { username, quizId, answers, timeSpentSeconds } = req.body;
   const store = readStore();
   const sessionKey = `${username}_${quizId}`;
@@ -579,19 +579,20 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => 
 });
 
 // 9. Admin Get Student Credentials JSON List
-app.get('/api/admin/credentials', (req, res) => {
+app.get(['/api/admin/credentials', '/admin/credentials'], (req, res) => {
   const store = readStore();
   res.json(store.students || []);
 });
 
 // Admin Get Live Proctoring Sessions List
-app.get('/api/admin/sessions', (req, res) => {
+app.get(['/api/admin/sessions', '/admin/sessions', '/api/admin/live-sessions', '/admin/live-sessions'], (req, res) => {
   const store = readStore();
-  res.json(store.sessions || {});
+  const sessions = Object.values(store.sessions || {});
+  res.json(sessions);
 });
 
 // Admin Remote Unblock Candidate Session
-app.post('/api/admin/unblock', (req, res) => {
+app.post(['/api/admin/unblock', '/admin/unblock', '/api/admin/unblock-student', '/admin/unblock-student'], (req, res) => {
   const { sessionKey, username } = req.body;
   const store = readStore();
 
@@ -669,7 +670,7 @@ app.get('/api/admin/download-credentials', (req, res) => {
 });
 
 // Admin Get Candidate Attendance & Participation Summary
-app.get('/api/admin/candidate-attendance', (req, res) => {
+app.get(['/api/admin/candidate-attendance', '/admin/candidate-attendance'], (req, res) => {
   const store = readStore();
   const students = store.students || [];
   const results = store.results || [];
@@ -800,7 +801,7 @@ app.post('/api/admin/unblock-student', (req, res) => {
 });
 
 // 12. Admin Get Scores & Results (Maintains Exact Candidate Directory Order)
-app.get('/api/admin/results', (req, res) => {
+app.get(['/api/admin/results', '/admin/results'], (req, res) => {
   const store = readStore();
   const students = store.students || [];
   const results = store.results || [];

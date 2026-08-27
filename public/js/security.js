@@ -93,10 +93,37 @@ window.SecurityEngine = (function() {
     };
   }
 
+  let pollUnblockStatusInterval = null;
+
+  function startUnblockPolling() {
+    if (pollUnblockStatusInterval) clearInterval(pollUnblockStatusInterval);
+    pollUnblockStatusInterval = setInterval(async () => {
+      if (!currentUsername || !currentQuizId) return;
+      try {
+        const res = await fetch(`/api/exam/session-status?username=${encodeURIComponent(currentUsername)}&quizId=${encodeURIComponent(currentQuizId)}`);
+        const data = await res.json();
+        if (data.success && data.session) {
+          if (data.session.status === 'IN_PROGRESS') {
+            stopUnblockPolling();
+            handleUnblockEvent();
+          }
+        }
+      } catch (e) {}
+    }, 2000);
+  }
+
+  function stopUnblockPolling() {
+    if (pollUnblockStatusInterval) {
+      clearInterval(pollUnblockStatusInterval);
+      pollUnblockStatusInterval = null;
+    }
+  }
+
   function triggerLockout(reason) {
     isProctorActive = false;
     playWarningSound();
     reportIncident('EXAM_BLOCKED', reason);
+    startUnblockPolling();
     if (onLockoutCallback) {
       onLockoutCallback(reason);
     }
@@ -106,6 +133,7 @@ window.SecurityEngine = (function() {
     isProctorActive = false;
     isEnteringFullscreen = false;
     tabSwitchCount = 0;
+    stopUnblockPolling();
     hideWarningModal();
     const modalEl = document.getElementById('security-warning-modal');
     if (modalEl) modalEl.classList.add('hidden');
@@ -490,6 +518,10 @@ window.SecurityEngine = (function() {
       } catch (err) {
         return { success: false, message: 'Server error during authorization.' };
       }
+    },
+
+    startUnblockPolling: function() {
+      startUnblockPolling();
     }
   };
 })();

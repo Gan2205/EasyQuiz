@@ -511,11 +511,68 @@ app.post('/api/exam/admin-code-unblock', (req, res) => {
   if (session) {
     session.status = 'IN_PROGRESS';
     session.tabSwitchCount = 0; // Reset tab count after unblock
+    session.unblockedAt = new Date().toISOString();
     writeStore(store);
     broadcastToStudent(username, { type: 'EXAM_UNBLOCKED', session });
   }
 
   res.json({ success: true, message: 'Student successfully unblocked.' });
+});
+
+// Admin Remote Unblock Student Endpoint
+app.post(['/api/admin/unblock-student', '/admin/unblock-student'], (req, res) => {
+  const { sessionKey, username } = req.body;
+  const store = readStore();
+
+  let targetSessionKey = sessionKey;
+  if (!targetSessionKey && username) {
+    const cleanUser = username.toLowerCase().trim();
+    for (const [sKey, sess] of Object.entries(store.sessions || {})) {
+      if ((sess.username || '').toLowerCase() === cleanUser || (sess.rollNumber || '').toLowerCase().split('@')[0] === cleanUser) {
+        targetSessionKey = sKey;
+        break;
+      }
+    }
+  }
+
+  const session = store.sessions[targetSessionKey];
+  if (!session) {
+    return res.status(404).json({ success: false, message: 'Session record not found.' });
+  }
+
+  session.status = 'IN_PROGRESS';
+  session.tabSwitchCount = 0;
+  session.unblockedAt = new Date().toISOString();
+  writeStore(store);
+
+  broadcastToStudent(session.username, { type: 'EXAM_UNBLOCKED', session });
+
+  res.json({ success: true, message: `Candidate ${session.studentName || session.username} unblocked successfully!` });
+});
+
+// Real-Time Session Status Polling Endpoint (for Vercel Serverless Sync)
+app.get(['/api/exam/session-status', '/exam/session-status'], (req, res) => {
+  const { username, quizId } = req.query;
+  const store = readStore();
+  
+  const cleanUser = (username || '').toLowerCase().trim();
+  const cleanRoll = cleanUser.split('@')[0];
+
+  let session = null;
+  for (const [key, sess] of Object.entries(store.sessions || {})) {
+    const sUser = (sess.username || '').toLowerCase();
+    const sRoll = (sess.rollNumber || '').toLowerCase().split('@')[0];
+    if ((sUser === cleanUser || sRoll === cleanRoll) && (!quizId || sess.quizId === quizId)) {
+      session = sess;
+      break;
+    }
+  }
+
+  if (!session) {
+    return res.json({ success: false, message: 'Session not found.' });
+  }
+
+  res.json({ success: true, session });
 });
 
 // 8. Admin Upload Excel / CSV Roster & Auto-Generate Credentials

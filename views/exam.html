@@ -552,6 +552,10 @@
 
       document.getElementById('telemetry-badge').className = 'badge badge-red';
       document.getElementById('telemetry-badge').innerHTML = '<span class="pulse-dot"></span> ACCESS RESTRICTED';
+
+      if (window.SecurityEngine && typeof window.SecurityEngine.startUnblockPolling === 'function') {
+        window.SecurityEngine.startUnblockPolling();
+      }
     }
 
     function hideBlockedScreen() {

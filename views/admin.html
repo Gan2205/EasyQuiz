@@ -38,6 +38,7 @@
         <span class="pulse-dot"></span> Firebase Synced (studio-8450670559-9edfe)
       </span>
       <button class="btn btn-secondary btn-sm" onclick="triggerManualFirebaseSync()">⚡ Sync Firebase</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetDatabaseRemote()" style="border-color: rgba(239, 68, 68, 0.4); color: var(--status-danger);">🗑️ Clear Test Data</button>
       <a href="/" class="btn btn-secondary btn-sm">Exit Console</a>
     </div>
   </nav>
@@ -712,6 +713,32 @@
         }
       } catch (err) {
         alert('Server error while deduplicating candidates.');
+      }
+    }
+
+    async function resetDatabaseRemote() {
+      const option = prompt('Type 1 to Clear Test Telemetry & Scores Only.\nType 2 for Full Production Reset (Deletes Quizzes & Roster too).', '1');
+      if (!option) return;
+
+      const resetType = option === '2' ? 'FULL_RESET' : 'SESSIONS_ONLY';
+      const confirmMsg = resetType === 'FULL_RESET' ? 'Are you SURE you want to perform a FULL database reset?' : 'Clear all live telemetry sessions & completed test scores?';
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch('/api/admin/reset-database', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ resetType })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          loadAdminDashboard();
+        } else {
+          alert('Failed to reset test data.');
+        }
+      } catch (e) {
+        alert('Error communicating with server during reset.');
       }
     }
 

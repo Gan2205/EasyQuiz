@@ -58,11 +58,7 @@ try {
   initialBundledStore = {
     admin: { username: "SCRS", password: "SCRS@2026" },
     quizzes: [],
-    students: [
-      { id: "stu-1", name: "Ganesh", rollNumber: "99230040791@klu.ac.in", username: "ganesh", password: "6xWtY3mS" },
-      { id: "stu-2", name: "dhanush", rollNumber: "99230040792@klu.ac.in", username: "dhanush", password: "tN8UAsxp" },
-      { id: "stu-3", name: "rahul", rollNumber: "99230040546@klu.ac.in", username: "rahul", password: "KffK64kb" }
-    ],
+    students: [],
     sessions: {},
     results: []
   };
@@ -629,6 +625,31 @@ app.post(['/api/admin/deduplicate-candidates', '/admin/deduplicate-candidates'],
     message: `Successfully deduplicated roster! Removed ${removedCount} duplicate entries.`,
     count: uniqueStudents.length,
     students: uniqueStudents
+  });
+});
+
+// Admin Reset System Data (Clear sessions/results or Full Reset)
+app.post(['/api/admin/reset-database', '/admin/reset-database'], (req, res) => {
+  const { resetType } = req.body; // 'SESSIONS_ONLY' or 'FULL_RESET'
+  const store = readStore();
+
+  if (resetType === 'FULL_RESET') {
+    store.quizzes = [];
+    store.students = [];
+    store.sessions = {};
+    store.results = [];
+  } else {
+    // Default: Clear all active telemetry sessions & exam results
+    store.sessions = {};
+    store.results = [];
+  }
+
+  writeStore(store);
+
+  res.json({
+    success: true,
+    message: resetType === 'FULL_RESET' ? 'Full platform database reset completed.' : 'Telemetry sessions and exam results cleared successfully.',
+    store
   });
 });
 

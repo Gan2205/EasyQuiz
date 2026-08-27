@@ -7,6 +7,7 @@ const multer = require('multer');
 const csvParser = require('csv-parser');
 const cors = require('cors');
 const XLSX = require('xlsx');
+const AdmZip = require('adm-zip');
 const FirebaseService = require('./services/firebaseService');
 
 const IS_VERCEL = !!(process.env.VERCEL || process.env.NOW_BUILDER);
@@ -597,18 +598,32 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => 
   }
 });
 
-// DOCX XML Text Extractor (Lightweight, Serverless-Friendly)
+// DOCX XML Text Extractor (Pure JS AdmZip Extractor)
 function extractTextFromDocxBuffer(buffer) {
   try {
-    const str = buffer.toString('utf8');
-    const matches = str.match(/<w:t[^>]*>(.*?)<\/w:t>/gi);
-    if (matches && matches.length > 0) {
-      return matches.map(m => m.replace(/<[^>]+>/g, '')).join('\n');
+    const zip = new AdmZip(buffer);
+    const zipEntries = zip.getEntries();
+    const docEntry = zipEntries.find(e => e.entryName === 'word/document.xml');
+
+    if (docEntry) {
+      const xmlText = docEntry.getData().toString('utf8');
+      const matches = xmlText.match(/<w:t[^>]*>(.*?)<\/w:t>/gi);
+      if (matches && matches.length > 0) {
+        return matches.map(m => m.replace(/<[^>]+>/g, '').trim()).filter(t => t.length > 0).join('\n');
+      }
+      return xmlText.replace(/<[^>]+>/g, ' ');
     }
-    return str.replace(/<[^>]+>/g, ' ');
   } catch (e) {
-    return buffer.toString('utf8');
+    console.error('Docx ZIP parse error:', e.message);
   }
+
+  // Fallback if raw text
+  const rawStr = buffer.toString('utf8');
+  const matches = rawStr.match(/<w:t[^>]*>(.*?)<\/w:t>/gi);
+  if (matches && matches.length > 0) {
+    return matches.map(m => m.replace(/<[^>]+>/g, '')).join('\n');
+  }
+  return rawStr.replace(/[^\x20-\x7E\r\n]/g, ' ');
 }
 
 // Plain Text / DOCX Question & Options Parser
@@ -619,22 +634,25 @@ function parseQuestionsFromText(text) {
   let currentQ = null;
 
   lines.forEach(line => {
-    const qMatch = line.match(/^(?:Q\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
-    const optMatch = line.match(/^(?:[A-Da-d0-3][\.\)]|\([A-Da-d]\))\s*(.*)/i);
+    // Ignore stray XML headers or zip signatures
+    if (line.startsWith('PK') || line.includes('[Content_Types]') || line.includes('schemas.openxmlformats')) return;
 
-    if (optMatch && currentQ) {
-      const optText = optMatch[1].trim();
+    const isOptionLine = line.match(/^(?:[A-Da-d0-3][\.\)]|\([A-Da-d0-3]\)|Option\s*[1-4]:?)\s*(.*)/i);
+    const isQuestionLine = line.match(/^(?:Q\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
+
+    if (isOptionLine && currentQ) {
+      const optText = isOptionLine[1].trim() || line;
       if (currentQ.options.length < 4) {
         currentQ.options.push(optText);
       }
-    } else if (qMatch) {
+    } else if (isQuestionLine && (!currentQ || currentQ.options.length >= 2)) {
       if (currentQ && currentQ.text && currentQ.options.length >= 2) {
-        while (currentQ.options.length < 4) currentQ.options.push('None');
+        while (currentQ.options.length < 4) currentQ.options.push('N/A');
         questions.push(currentQ);
       }
       currentQ = {
         id: 'q-' + Date.now() + '-' + questions.length,
-        text: qMatch[1].trim() || line,
+        text: isQuestionLine[1].trim() || line,
         options: [],
         correctAnswer: 0
       };
@@ -655,7 +673,7 @@ function parseQuestionsFromText(text) {
   });
 
   if (currentQ && currentQ.text) {
-    while (currentQ.options.length < 4) currentQ.options.push('None');
+    while (currentQ.options.length < 4) currentQ.options.push('N/A');
     questions.push(currentQ);
   }
 

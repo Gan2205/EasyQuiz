@@ -6,8 +6,6 @@ const fs = require('fs');
 const multer = require('multer');
 const csvParser = require('csv-parser');
 const cors = require('cors');
-const pdfParse = require('pdf-parse');
-const mammoth = require('mammoth');
 const XLSX = require('xlsx');
 const FirebaseService = require('./services/firebaseService');
 

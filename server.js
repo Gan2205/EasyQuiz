@@ -635,12 +635,15 @@ function extractTextFromDocxBuffer(buffer) {
   return rawStr.replace(/[^\x20-\x7E\r\n]/g, ' ');
 }
 
-// DOCX & Text Question & Options Layout Parser
-function parseQuestionsFromText(text) {
-  // Pre-process text to separate inline multi-options (e.g. "a. gangster b. goon" -> "a. gangster\nb. goon")
+// DOCX & Text Question & Options Layout Parser (Supports Alphabetic & Numerical Options)
+function parseQuestionsFromText(text, optionFormat = 'auto') {
+  if (!text) return [];
+
+  // Pre-process text to separate inline multi-options (e.g. "a. gangster b. goon" or "1. gangster 2. goon")
   let processedText = (text || '')
     .replace(/(\d+)[\.\)]\s*([a-zA-Z0-9])/g, '$1. $2')
-    .replace(/([^\n])\s+([a-dA-D][\.\)]|\([a-dA-D]\))\s*/g, '$1\n$2 ');
+    .replace(/([^\n])\s+([a-dA-D][\.\)]|\([a-dA-D]\))\s*/g, '$1\n$2 ')
+    .replace(/([^\n])\s+([2-4][\.\)]|\([2-4]\))\s+/g, '$1\n$2 ');
 
   const rawLines = processedText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
   const questions = [];
@@ -650,24 +653,44 @@ function parseQuestionsFromText(text) {
     // Ignore document title lines or ZIP headers
     if (line.toLowerCase() === 'sample quiz' || line.startsWith('PK') || line.includes('[Content_Types]')) return;
 
-    // Strict Question Line Match: 1., 2., 3., 4., Q1:, Q2:, Question 1:
-    const isQuestionLine = line.match(/^(?:Q(?:uestion)?\s*\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
-    // Strict Option Line Match: a., b., c., d., A., B., C., D., (a), (b), (c), (d), Option A:, Option 1:
-    const isOptionLine = line.match(/^(?:[A-Da-d][\.\)]|\([A-Da-d]\)|Option\s*[A-Da-d1-4]:?)\s*(.*)/i);
+    const isAlphaOption = line.match(/^(?:[A-Da-d][\.\)]|\([A-Da-d]\)|Option\s*[A-Da-d1-4]:?)\s*(.*)/i);
+    const isNumOption = line.match(/^(?:[1-4][\.\)]|\([1-4]\))\s*(.*)/i);
+    const isQuestionHeader = line.match(/^(?:Q(?:uestion)?\s*\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
 
-    if (isOptionLine && currentQ) {
-      const optText = isOptionLine[1].trim() || line;
-      if (currentQ.options.length < 4) {
-        currentQ.options.push(optText);
+    if (optionFormat === 'numeric') {
+      if (isNumOption && currentQ && currentQ.options.length < 4) {
+        currentQ.options.push(isNumOption[1].trim() || line);
+        return;
       }
-    } else if (isQuestionLine) {
+    } else if (optionFormat === 'alphabetic') {
+      if (isAlphaOption && currentQ && currentQ.options.length < 4) {
+        currentQ.options.push(isAlphaOption[1].trim() || line);
+        return;
+      }
+    } else {
+      // Auto-Detect Mode
+      if (isAlphaOption && currentQ && currentQ.options.length < 4) {
+        currentQ.options.push(isAlphaOption[1].trim() || line);
+        return;
+      }
+      if (isNumOption && currentQ) {
+        const expectedNum = currentQ.options.length + 1;
+        const numMatch = line.match(/^([1-4])[\.\)]/);
+        if (numMatch && parseInt(numMatch[1], 10) === expectedNum) {
+          currentQ.options.push(isNumOption[1].trim() || line);
+          return;
+        }
+      }
+    }
+
+    if (isQuestionHeader) {
       if (currentQ && currentQ.text) {
         while (currentQ.options.length < 4) currentQ.options.push('N/A');
         questions.push(currentQ);
       }
       currentQ = {
         id: 'q-' + Date.now() + '-' + questions.length,
-        text: isQuestionLine[1].trim() || line,
+        text: isQuestionHeader[1].trim() || line,
         options: [],
         correctAnswer: 0
       };
@@ -677,6 +700,13 @@ function parseQuestionsFromText(text) {
       } else {
         currentQ.text += ' ' + line;
       }
+    } else {
+      currentQ = {
+        id: 'q-' + Date.now() + '-' + questions.length,
+        text: line,
+        options: [],
+        correctAnswer: 0
+      };
     }
   });
 
@@ -696,6 +726,7 @@ app.post(['/api/admin/upload-questions', '/admin/upload-questions'], upload.sing
 
   const filePath = req.file.path;
   const fileName = req.file.originalname.toLowerCase();
+  const optionFormat = req.body.optionFormat || 'auto';
   let questions = [];
 
   try {
@@ -740,7 +771,7 @@ app.post(['/api/admin/upload-questions', '/admin/upload-questions'], upload.sing
         rawText = fileBuffer.toString('utf8');
       }
 
-      questions = parseQuestionsFromText(rawText);
+      questions = parseQuestionsFromText(rawText, optionFormat);
     }
 
     try { fs.unlinkSync(filePath); } catch (e) {}

@@ -1,0 +1,6 @@
+Question Text,Option 1,Option 2,Option 3,Option 4,Correct Answer Index (0-3)
+What is the default port for HTTP traffic?,80,443,8080,21,0
+Which data structure operates on a First-In-First-Out (FIFO) principle?,Stack,Queue,Tree,Graph,1
+What does HTML stand for?,Hyper Text Markup Language,High Tech Multi Language,Hyper Transfer Main Language,Home Tool Markup Language,0
+Which encryption algorithm is symmetric?,AES,RSA,ECC,Diffie-Hellman,0
+Which HTTP status code indicates "Not Found"?,200,301,404,500,2

@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Secure Assessment Extension",
+  "version": "1.0.0",
+  "description": "Official Proctored Exam Lockdown Extension. Temporarily suppresses third-party browser extensions during online examinations.",
+  "permissions": [
+    "management",
+    "tabs",
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "externally_connectable": {
+    "matches": ["http://localhost/*", "https://*/*"]
+  },
+  "action": {
+    "default_title": "Secure Assessment Extension Status"
+  }
+}

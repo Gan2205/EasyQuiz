@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrator Console - EasyQuiz</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <!-- Ambient Dynamic Glowing Mesh Background Orbs -->
+  <div class="ambient-glow-wrapper">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+    <div class="glow-orb orb-4"></div>
+  </div>
+
+  <!-- Interactive Security Grid Canvas -->
+  <canvas id="bg-grid-canvas" class="bg-grid-canvas"></canvas>
+
+  <!-- Navigation Header -->
+  <nav class="navbar">
+    <div class="brand">
+      <div class="brand-shield-icon glow-pulse-shield">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-title">EasyQuiz Management Console</span>
+        <span class="brand-subtitle">Institutional Administrator System</span>
+      </div>
+    </div>
+
+    <div class="nav-controls">
+      <span class="badge badge-green glow-badge" id="firebase-status-badge">
+        <span class="pulse-dot"></span> Firebase Synced (studio-8450670559-9edfe)
+      </span>
+      <button class="btn btn-secondary btn-sm" onclick="triggerManualFirebaseSync()">⚡ Sync Firebase</button>
+      <a href="/" class="btn btn-secondary btn-sm">Exit Console</a>
+    </div>
+  </nav>
+
+  <!-- Admin Login Modal -->
+  <div id="admin-login-modal" class="modal-overlay">
+    <div class="modal-content ultra-glass-card" style="max-width: 440px;">
+      <div class="glass-card-shine"></div>
+      <div style="width: 56px; height: 56px; background: rgba(14, 165, 233, 0.1); border: 1px solid rgba(14, 165, 233, 0.25); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: var(--primary-400);">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <h3 class="modal-title" style="font-size: 1.35rem; font-weight: 700; color: #fff;">Administrator Authentication</h3>
+      <p class="modal-desc" style="font-size: 0.85rem;">Provide authorized administrator credentials to unlock the proctoring console.</p>
+
+      <form id="admin-login-form" autocomplete="off">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="admin-user">Administrator ID</label>
+          <input type="text" id="admin-user" class="form-input" placeholder="Enter Administrator ID (SCRS)" required autocomplete="off">
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="admin-pass">Access Secret / Password</label>
+          <input type="password" id="admin-pass" class="form-input" placeholder="••••••••" required autocomplete="new-password">
+        </div>
+        <div id="admin-auth-error" class="hidden" style="color: var(--status-danger); font-size: 0.85rem; margin-bottom: 1rem; background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 6px;">
+          Invalid Admin Credentials. (Use Administrator ID: SCRS)
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Authorize Administrator Console 🔓</button>
+      </form>
+
+      <div style="margin-top: 1.25rem; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem;">
+        💡 <strong>Candidate Student Login?</strong><br>
+        Student candidates must sign in at <a href="/" style="color: var(--primary-400);">http://localhost:3000</a> to take exams.
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Workspace -->
+  <main class="container" style="position: relative; z-index: 10;">
+    <!-- Stat Summary Bar -->
+    <div class="admin-grid" style="margin-bottom: 1.5rem;">
+      <div class="stat-box ultra-glass-card">
+        <div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Registered Candidates</div>
+          <div class="stat-num" id="stat-students-count">0</div>
+        </div>
+        <div style="color: var(--primary-400);">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-box ultra-glass-card">
+        <div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Active Quizzes</div>
+          <div class="stat-num" id="stat-quizzes-count">0</div>
+        </div>
+        <div style="color: var(--primary-400);">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-box ultra-glass-card">
+        <div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Live Telemetry Sessions</div>
+          <div class="stat-num" id="stat-sessions-count">0</div>
+        </div>
+        <div style="color: var(--status-success);">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
+            <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/>
+            <circle cx="12" cy="12" r="2"/>
+            <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/>
+            <path d="M19.1 4.9c3.9 3.9 3.9 10.3 0 14.2"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-box ultra-glass-card" style="border-color: rgba(239, 68, 68, 0.3);">
+        <div>
+          <div style="font-size: 0.8rem; color: var(--status-danger); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Suspended / Blocked</div>
+          <div class="stat-num" style="color: var(--status-danger);" id="stat-blocked-count">0</div>
+        </div>
+        <div style="color: var(--status-danger);">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Console Navigation Tabs -->
+    <div class="tabs-header">
+      <button class="tab-btn active" onclick="switchTab('roster')">Candidate Directory & Credentials</button>
+      <button class="tab-btn" onclick="switchTab('attendance')">Candidate Attendance Monitor 📊</button>
+      <button class="tab-btn" onclick="switchTab('unblock')">Live Proctoring & Unblock Console</button>
+      <button class="tab-btn" onclick="switchTab('quizzes')">Quiz & Time Limit Configuration</button>
+      <button class="tab-btn" onclick="switchTab('scores')">Assessment Scores & Audit Logs</button>
+    </div>
+
+    <!-- TAB 1: Student Roster & Credential Generator -->
+    <section id="tab-roster" class="glass-card ultra-glass-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #fff;">Candidate Roster & Credential Generator</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">
+            Upload an institutional Excel/CSV roster (Columns: Name, Roll Number/Email). Credentials will be auto-generated.
+          </p>
+        </div>
+        <a href="/api/admin/download-credentials" class="btn btn-primary btn-sm" download>
+          Download Credentials CSV
+        </a>
+      </div>
+
+      <!-- File Upload Zone -->
+      <div class="drop-zone" id="csv-drop-zone" onclick="document.getElementById('roster-file-input').click()">
+        <div style="color: var(--primary-400); margin-bottom: 0.75rem;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <h4 style="font-size: 1.05rem; color: #fff; font-weight: 600; margin-bottom: 0.2rem;">Click or Drag & Drop Candidate Roster (Excel .xlsx / .xls or CSV)</h4>
+        <p style="font-size: 0.825rem; color: var(--text-muted);">Parses candidate names and generates secure usernames and passwords.</p>
+        <input type="file" id="roster-file-input" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleFileUpload(event)">
+      </div>
+
+      <div id="upload-status" class="hidden" style="margin-top: 1rem; padding: 0.75rem; border-radius: 8px; font-size: 0.875rem; text-align: center;"></div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; margin-bottom: 1rem;">
+        <h3 style="font-size: 1.05rem; font-weight: 700; color: #fff;">Candidate Credentials Directory</h3>
+        <input type="text" id="creds-search-input" class="form-input" placeholder="Search by name or roll number..." style="max-width: 300px; padding: 0.45rem 0.85rem; font-size: 0.85rem;" onkeyup="filterCredentialsTable()">
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Candidate Name</th>
+              <th>Register Number</th>
+              <th>Generated Username</th>
+              <th>Assigned Password</th>
+              <th>Creation Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="credentials-table-body">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 1b: Candidate Attendance & Participation Monitor -->
+    <section id="tab-attendance" class="glass-card hidden">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #fff;">Candidate Exam Attendance & Participation Monitor</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">
+            Track in real-time which registered candidates have completed the test, who are currently testing, and who haven't taken the test yet.
+          </p>
+        </div>
+        <a href="/api/admin/download-attendance" class="btn btn-primary btn-sm">Download Attendance CSV 📥</a>
+      </div>
+
+      <!-- Attendance Metrics Row -->
+      <div class="metrics-grid" style="margin-bottom: 1.5rem;">
+        <div class="metric-card">
+          <div class="metric-label">Taken / Completed</div>
+          <div class="metric-value metric-green" id="att-count-completed">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Haven't Taken Test</div>
+          <div class="metric-value metric-amber" id="att-count-not-started">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Testing in Progress</div>
+          <div class="metric-value metric-blue" id="att-count-in-progress">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Suspended / Blocked</div>
+          <div class="metric-value metric-red" id="att-count-blocked">0</div>
+        </div>
+      </div>
+
+      <!-- Attendance Filter Bar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;">
+        <input type="text" id="att-search-input" class="form-input" placeholder="Search candidate name or register number..." style="max-width: 320px;" onkeyup="filterAttendanceTable()">
+        <select id="att-filter-select" class="form-input" style="max-width: 220px;" onchange="filterAttendanceTable()">
+          <option value="ALL">All Candidate Statuses</option>
+          <option value="COMPLETED">Completed (Taken Test)</option>
+          <option value="NOT_STARTED">Haven't Taken Test</option>
+          <option value="IN_PROGRESS">In Progress (Testing)</option>
+          <option value="BLOCKED">Suspended / Blocked</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" onclick="fetchAttendanceData()">Refresh Status 🔄</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Candidate Name</th>
+              <th>Register Number</th>
+              <th>Test Participation Status</th>
+              <th>Achieved Score</th>
+              <th>Activity Timestamp</th>
+            </tr>
+          </thead>
+          <tbody id="attendance-table-body">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 2: Live Proctoring & Unblock Console -->
+    <section id="tab-unblock" class="glass-card hidden">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #fff;">Live Proctoring Telemetry & Unblock Console</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">
+            Real-time monitor of active sessions. Click <strong>Unblock Candidate</strong> to send an instant WebSocket unlock signal to a suspended test.
+          </p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="fetchLiveSessions()">Refresh Telemetry</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Candidate Name</th>
+              <th>Register Number</th>
+              <th>Assessment Title</th>
+              <th>Focus Losses</th>
+              <th>Current Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="live-sessions-table-body">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 3: Quiz Manager -->
+    <section id="tab-quizzes" class="glass-card hidden">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #fff;">Quiz & Time Limit Configuration</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">Configure assessment modules, duration timers, and item options.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openQuizEditor()">+ Add New Quiz</button>
+      </div>
+
+      <div id="quiz-editor-card" class="glass-card hidden" style="background: rgba(15, 23, 42, 0.75); margin-bottom: 2rem;">
+        <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 1rem;" id="editor-title-heading">Assessment Module Editor</h3>
+        <input type="hidden" id="edit-quiz-id">
+
+        <div class="form-group">
+          <label class="form-label">Quiz Title</label>
+          <input type="text" id="quiz-title-input" class="form-input" placeholder="e.g. Advanced Network Security Assessment">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <input type="text" id="quiz-desc-input" class="form-input" placeholder="Brief domain overview...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Allocated Duration (Minutes)</label>
+          <input type="number" id="quiz-time-input" class="form-input" value="15" min="1" max="180">
+        </div>
+
+        <!-- Bulk Question File Upload Box -->
+        <div style="background: rgba(14, 165, 233, 0.05); border: 1px dashed var(--primary-400); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div style="font-size: 0.9rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Bulk Import Questions (PDF, Word DOCX, TXT, CSV, JSON)
+            </div>
+            <a href="/api/admin/download-sample-questions" class="btn btn-secondary btn-sm" download style="font-size: 0.75rem;">
+              📥 Download Sample CSV Template
+            </a>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Supports <strong>PDF (.pdf)</strong>, <strong>Word (.docx)</strong>, <strong>Text (.txt)</strong>, <strong>CSV (.csv)</strong>, and <strong>JSON (.json)</strong> document formats.
+          </p>
+
+          <!-- Option Prefix Format Selection Dropdown -->
+          <div style="display: flex; justify-content: center; gap: 0.75rem; align-items: center; margin-bottom: 1rem;">
+            <label style="font-size: 0.825rem; color: var(--text-secondary); font-weight: 600;">Option Prefix Format in Document:</label>
+            <select id="option-format-select" class="form-input" style="max-width: 320px; padding: 0.4rem 0.75rem; font-size: 0.85rem;">
+              <option value="auto">✨ Auto-Detect (Numerical or Alphabetic)</option>
+              <option value="numeric">🔢 Numerical Options (1. 2. 3. 4. / 1) 2) 3) 4))</option>
+              <option value="alphabetic">🔤 Alphabetic Options (A. B. C. D. / a. b. c. d.)</option>
+            </select>
+          </div>
+
+          <input type="file" id="questions-file-input" accept=".pdf,.docx,.doc,.txt,.csv,.json" class="hidden" onchange="uploadQuestionsFile(event)">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('questions-file-input').click()">
+            📁 Choose Question File (PDF / Word / TXT / CSV / JSON)
+          </button>
+          <div id="q-upload-status" class="hidden" style="margin-top: 0.75rem; font-size: 0.85rem;"></div>
+        </div>
+
+        <h4 style="font-size: 0.95rem; color: var(--primary-400); margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">Question Items List</h4>
+        <div id="editor-questions-list"></div>
+        <button class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;" onclick="addQuestionField()">+ Add Item</button>
+
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button class="btn btn-primary" onclick="saveQuiz()">Save Module Configuration</button>
+          <button class="btn btn-secondary" onclick="closeQuizEditor()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Assessment Title</th>
+              <th>Description</th>
+              <th>Duration</th>
+              <th>Items Count</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="quizzes-table-body">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 4: Scores & Reports -->
+    <section id="tab-scores" class="glass-card hidden">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #fff;">Assessment Scores & Audit Reports</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">Detailed scores breakdown, duration logs, and proctoring violation counts.</p>
+        </div>
+        <a href="/api/admin/download-scores" class="btn btn-primary btn-sm" download>
+          Download Scores CSV
+        </a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Candidate Name</th>
+              <th>Register Number</th>
+              <th>Assessment Title</th>
+              <th>Score %</th>
+              <th>Duration</th>
+              <th>Violations Log</th>
+              <th>Final Status</th>
+              <th>Submission Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="scores-table-body">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let adminToken = null;
+    let questionsBuffer = [];
+
+    document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('admin-user').value.trim();
+      const password = document.getElementById('admin-pass').value.trim();
+      const errDiv = document.getElementById('admin-auth-error');
+
+      errDiv.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/auth/admin-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          adminToken = data.token;
+          document.getElementById('admin-login-modal').classList.add('hidden');
+          loadAdminDashboard();
+        } else {
+          errDiv.textContent = data.message || 'Authentication failed.';
+          errDiv.classList.remove('hidden');
+        }
+      } catch (err) {
+        errDiv.textContent = 'Server connection error.';
+        errDiv.classList.remove('hidden');
+      }
+    });
+
+    function switchTab(tabId) {
+      const tabs = ['roster', 'attendance', 'unblock', 'quizzes', 'scores'];
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      const activeSection = document.getElementById(`tab-${tabId}`);
+      if (activeSection) activeSection.classList.remove('hidden');
+
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+      }
+
+      if (tabId === 'roster') fetchCredentials();
+      if (tabId === 'attendance') fetchAttendanceData();
+      if (tabId === 'unblock') fetchLiveSessions();
+      if (tabId === 'quizzes') fetchQuizzes();
+      if (tabId === 'scores') fetchScores();
+    }
+
+    let globalAttendanceList = [];
+
+    async function fetchAttendanceData() {
+      try {
+        const res = await fetch('/api/admin/candidate-attendance');
+        const data = await res.json();
+
+        // Update Dashboard Metrics
+        const comp = data.completedCount || 0;
+        const notStart = data.notStartedCount || 0;
+        const inProg = data.inProgressCount || 0;
+        const block = data.blockedCount || 0;
+
+        if (document.getElementById('att-stat-completed')) document.getElementById('att-stat-completed').textContent = comp;
+        if (document.getElementById('att-stat-not-started')) document.getElementById('att-stat-not-started').textContent = notStart;
+        if (document.getElementById('att-stat-in-progress')) document.getElementById('att-stat-in-progress').textContent = inProg;
+        if (document.getElementById('att-stat-blocked')) document.getElementById('att-stat-blocked').textContent = block;
+
+        if (document.getElementById('dash-stat-completed')) document.getElementById('dash-stat-completed').textContent = comp;
+        if (document.getElementById('dash-stat-not-started')) document.getElementById('dash-stat-not-started').textContent = notStart;
+        if (document.getElementById('dash-stat-in-progress')) document.getElementById('dash-stat-in-progress').textContent = inProg;
+        if (document.getElementById('dash-stat-blocked')) document.getElementById('dash-stat-blocked').textContent = block;
+
+        globalAttendanceList = data.attendanceList || [];
+        renderDashboardAttendanceTable(globalAttendanceList);
+      } catch (err) {
+        console.error('Failed to fetch attendance data:', err);
+      }
+    }
+
+    function cleanRegNumber(val) {
+      if (!val) return 'N/A';
+      return String(val).split('@')[0].trim();
+    }
+
+    function renderDashboardAttendanceTable(list) {
+      const tbody = document.getElementById('dash-attendance-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (!Array.isArray(list) || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No candidate records found. Upload a candidate roster above.</td></tr>';
+        return;
+      }
+
+      list.forEach(item => {
+        const tr = document.createElement('tr');
+
+        let statusBadge = '<span class="badge badge-amber">HAVEN\'T TAKEN TEST</span>';
+        if (item.status === 'COMPLETED') statusBadge = '<span class="badge badge-green">TAKEN TEST (COMPLETED)</span>';
+        else if (item.status === 'IN_PROGRESS') statusBadge = '<span class="badge badge-blue">TESTING IN PROGRESS</span>';
+        else if (item.status === 'BLOCKED') statusBadge = '<span class="badge badge-red">SUSPENDED / BLOCKED</span>';
+
+        tr.innerHTML = `
+          <td><strong style="color: #fff;">${item.name}</strong></td>
+          <td>${cleanRegNumber(item.rollNumber)}</td>
+          <td>${statusBadge}</td>
+          <td><strong style="color: var(--primary-400); font-family: var(--font-mono);">${item.score}</strong></td>
+          <td><span style="font-size: 0.85rem; color: var(--text-muted);">${item.timeInfo}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterAttendanceTable() {
+      const query = (document.getElementById('att-search-input').value || '').toLowerCase();
+      const statusFilter = document.getElementById('att-filter-select').value;
+
+      const filtered = globalAttendanceList.filter(item => {
+        const matchesQuery = (item.name || '').toLowerCase().includes(query) || (item.rollNumber || '').toLowerCase().includes(query);
+        const matchesStatus = statusFilter === 'ALL' || item.status === statusFilter;
+        return matchesQuery && matchesStatus;
+      });
+
+      renderAttendanceTable(filtered);
+    }
+
+    function renderAttendanceTable(list) {
+      const tbody = document.getElementById('attendance-table-body');
+      tbody.innerHTML = '';
+
+      if (!Array.isArray(list) || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No candidate records found matching filter.</td></tr>';
+        return;
+      }
+
+      list.forEach(item => {
+        const tr = document.createElement('tr');
+
+        let statusBadge = '<span class="badge badge-amber">NOT STARTED (Haven\'t Taken)</span>';
+        if (item.status === 'COMPLETED') statusBadge = '<span class="badge badge-green">COMPLETED (Taken Test)</span>';
+        else if (item.status === 'IN_PROGRESS') statusBadge = '<span class="badge badge-blue">IN PROGRESS (Testing)</span>';
+        else if (item.status === 'BLOCKED') statusBadge = `<span class="badge badge-red">SUSPENDED / BLOCKED</span> <button class="btn btn-danger btn-sm" style="margin-left: 0.5rem; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="unblockStudentRemote('', '${item.username}')">🔓 Unblock</button>`;
+
+        tr.innerHTML = `
+          <td><strong style="color: #fff;">${item.name}</strong></td>
+          <td>${cleanRegNumber(item.rollNumber)}</td>
+          <td>${statusBadge}</td>
+          <td><strong style="color: var(--primary-400); font-family: var(--font-mono);">${item.score}</strong></td>
+          <td><span style="font-size: 0.85rem; color: var(--text-muted);">${item.timeInfo}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function fetchLiveSessions() {
+      try {
+        const res = await fetch('/api/admin/sessions');
+        const sessionsObj = await res.json();
+        const sessions = Object.values(sessionsObj);
+        renderLiveSessionsTable(sessions);
+      } catch (err) {
+        console.error('Failed to fetch live sessions:', err);
+      }
+    }
+
+    function renderLiveSessionsTable(sessions) {
+      const tbody = document.getElementById('live-sessions-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (!Array.isArray(sessions) || sessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No active proctoring sessions found.</td></tr>';
+        document.getElementById('stat-sessions-count').textContent = '0';
+        document.getElementById('stat-blocked-count').textContent = '0';
+        return;
+      }
+
+      let blockedCount = 0;
+      document.getElementById('stat-sessions-count').textContent = sessions.length;
+
+      sessions.forEach(sess => {
+        const isBlocked = sess.status === 'BLOCKED';
+        if (isBlocked) blockedCount++;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong style="color: #fff;">${sess.studentName || sess.username}</strong></td>
+          <td>${cleanRegNumber(sess.rollNumber)}</td>
+          <td>${sess.quizTitle || 'Assessment'}</td>
+          <td><span class="badge ${sess.tabSwitchCount > 0 ? 'badge-amber' : 'badge-green'}">${sess.tabSwitchCount || 0} Focus Losses</span></td>
+          <td>
+            <span class="badge ${isBlocked ? 'badge-red' : 'badge-green'}">
+              ${isBlocked ? 'RESTRICTED / BLOCKED' : 'ACTIVE TESTING'}
+            </span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 0.4rem;">
+              ${isBlocked ? `<button class="btn btn-danger btn-sm" onclick="unblockStudentRemote('${sess.sessionKey}', '${sess.username}')">🔓 Unblock</button>` : '<span style="font-size: 0.8rem; color: var(--text-muted);">Active</span>'}
+              <button class="btn btn-secondary btn-sm" onclick="deleteSession('${sess.sessionKey}')">Delete 🗑️</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('stat-blocked-count').textContent = blockedCount;
+    }
+
+    async function unblockStudentRemote(sessionKey, username) {
+      try {
+        const res = await fetch('/api/admin/unblock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionKey, username })
+        });
+        const data = await res.json();
+        if (data.success) {
+          fetchLiveSessions();
+          fetchAttendanceData();
+        } else {
+          alert(data.message || 'Failed to send unblock signal.');
+        }
+      } catch (e) {
+        alert('Server error sending unblock signal.');
+      }
+    }
+
+    async function loadAdminDashboard() {
+      await fetchCredentials();
+      await fetchQuizzes();
+      await fetchLiveSessions();
+      await fetchScores();
+      await fetchAttendanceData();
+      setInterval(fetchLiveSessions, 3000);
+      setInterval(fetchAttendanceData, 4000);
+    }
+
+    async function triggerManualFirebaseSync() {
+      try {
+        const badge = document.getElementById('firebase-status-badge');
+        badge.className = 'badge badge-amber';
+        badge.innerHTML = '<span class="pulse-dot"></span> Syncing to Firebase...';
+
+        const res = await fetch('/api/admin/firebase-sync', { method: 'POST' });
+        const data = await res.json();
+
+        if (data.success) {
+          badge.className = 'badge badge-green';
+          badge.innerHTML = `<span class="pulse-dot"></span> Firebase Synced (${data.status.projectId})`;
+          alert('Successfully synchronized data to Firebase Firestore!');
+        } else {
+          badge.className = 'badge badge-red';
+          badge.innerHTML = '<span class="pulse-dot"></span> Firebase Offline';
+        }
+      } catch (e) {
+        alert('Error triggering Firebase sync.');
+      }
+    }
+
+    async function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('rosterFile', file);
+
+      const statusDiv = document.getElementById('upload-status');
+      statusDiv.style.background = 'rgba(14, 165, 233, 0.15)';
+      statusDiv.style.color = 'var(--primary-400)';
+      statusDiv.textContent = 'Parsing roster and generating credentials...';
+      statusDiv.classList.remove('hidden');
+
+      try {
+        const res = await fetch('/api/admin/upload-roster', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          statusDiv.style.background = 'rgba(16, 185, 129, 0.15)';
+          statusDiv.style.color = '#34d399';
+          statusDiv.textContent = `Processed ${data.count} candidate credentials successfully!`;
+          fetchCredentials();
+        } else {
+          statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
+          statusDiv.style.color = 'var(--status-danger)';
+          statusDiv.textContent = data.message || 'Upload error.';
+        }
+      } catch (err) {
+        statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
+        statusDiv.style.color = 'var(--status-danger)';
+        statusDiv.textContent = 'Server error parsing roster file.';
+      }
+    }
+
+    async function fetchCredentials() {
+      try {
+        const resCreds = await fetch('/api/admin/credentials');
+        const students = await resCreds.json();
+        renderCredentialsTable(students);
+      } catch (e) {
+        console.error('Failed to fetch credentials:', e);
+      }
+    }
+
+    function renderCredentialsTable(students) {
+      const tbody = document.getElementById('credentials-table-body');
+      tbody.innerHTML = '';
+
+      if (!Array.isArray(students) || students.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No candidate credentials found. Upload a roster file above.</td></tr>';
+        document.getElementById('stat-students-count').textContent = '0';
+        return;
+      }
+
+      document.getElementById('stat-students-count').textContent = students.length;
+
+      students.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong style="color: #fff;">${s.name}</strong></td>
+          <td>${s.rollNumber}</td>
+          <td><code style="color: var(--primary-400); font-family: var(--font-mono);">${s.username}</code></td>
+          <td><code style="color: var(--status-warning); font-family: var(--font-mono);">${s.password}</code></td>
+          <td>${s.createdAt ? new Date(s.createdAt).toLocaleDateString() : 'N/A'}</td>
+          <td>
+            <button class="btn btn-secondary btn-sm" onclick="deleteCandidate('${s.id}')">Delete 🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterCredentialsTable() {
+      const query = document.getElementById('creds-search-input').value.toLowerCase();
+      const rows = document.querySelectorAll('#credentials-table-body tr');
+      rows.forEach(r => {
+        const text = r.textContent.toLowerCase();
+        r.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    async function fetchLiveSessions() {
+      try {
+        const res = await fetch('/api/admin/live-sessions');
+        const sessions = await res.json();
+        const tbody = document.getElementById('live-sessions-table-body');
+        tbody.innerHTML = '';
+
+        document.getElementById('stat-sessions-count').textContent = sessions.length;
+        let blockedCount = 0;
+
+        if (sessions.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No active proctoring sessions currently running.</td></tr>';
+          document.getElementById('stat-blocked-count').textContent = '0';
+          return;
+        }
+
+        sessions.forEach(sess => {
+          if (sess.status === 'BLOCKED') blockedCount++;
+          const tr = document.createElement('tr');
+          const isBlocked = sess.status === 'BLOCKED';
+
+          tr.innerHTML = `
+            <td><strong style="color: #fff;">${sess.studentName}</strong></td>
+            <td>${sess.rollNumber}</td>
+            <td>${sess.quizTitle}</td>
+            <td><span class="badge ${sess.tabSwitchCount > 0 ? 'badge-amber' : 'badge-green'}">${sess.tabSwitchCount} Focus Losses</span></td>
+            <td>
+              <span class="badge ${isBlocked ? 'badge-red' : (sess.status === 'COMPLETED' ? 'badge-green' : 'badge-amber')}">
+                ${sess.status}
+              </span>
+            </td>
+            <td>
+              <div style="display: flex; gap: 0.4rem;">
+                ${isBlocked ? `<button class="btn btn-danger btn-sm" onclick="unblockStudentRemote('${sess.sessionKey}')">🔓 Unblock</button>` : ''}
+                <button class="btn btn-secondary btn-sm" onclick="deleteSession('${sess.sessionKey}')">Delete 🗑️</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById('stat-blocked-count').textContent = blockedCount;
+      } catch (e) {}
+    }
+
+    async function unblockStudentRemote(sessionKey) {
+      if (confirm('Authorize remote unblock for this candidate session?')) {
+        try {
+          const res = await fetch('/api/admin/unblock-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionKey })
+          });
+          const data = await res.json();
+          alert(data.message);
+          fetchLiveSessions();
+        } catch (e) {
+          alert('Error authorizing unblock.');
+        }
+      }
+    }
+
+    async function fetchQuizzes() {
+      try {
+        const res = await fetch('/api/admin/quizzes');
+        const quizzes = await res.json();
+        const tbody = document.getElementById('quizzes-table-body');
+        tbody.innerHTML = '';
+
+        document.getElementById('stat-quizzes-count').textContent = quizzes.length;
+
+        quizzes.forEach(q => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong style="color: #fff;">${q.title}</strong></td>
+            <td>${q.description}</td>
+            <td>${q.timeLimitMinutes} Mins</td>
+            <td>${q.questions.length} Items</td>
+            <td>
+              <button class="btn btn-secondary btn-sm" onclick="deleteQuiz('${q.id}')">Delete Module</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {}
+    }
+
+    function openQuizEditor() {
+      document.getElementById('quiz-editor-card').classList.remove('hidden');
+      document.getElementById('edit-quiz-id').value = '';
+      document.getElementById('quiz-title-input').value = '';
+      document.getElementById('quiz-desc-input').value = '';
+      document.getElementById('quiz-time-input').value = '15';
+      questionsBuffer = [];
+      addQuestionField();
+    }
+
+    function closeQuizEditor() {
+      document.getElementById('quiz-editor-card').classList.add('hidden');
+    }
+
+    async function uploadQuestionsFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const optionFormatSelect = document.getElementById('option-format-select');
+      const optionFormat = optionFormatSelect ? optionFormatSelect.value : 'auto';
+
+      const formData = new FormData();
+      formData.append('questionFile', file);
+      formData.append('optionFormat', optionFormat);
+
+      const statusDiv = document.getElementById('q-upload-status');
+      statusDiv.style.color = 'var(--primary-400)';
+      statusDiv.textContent = 'Parsing questions file...';
+      statusDiv.classList.remove('hidden');
+
+      try {
+        const res = await fetch('/api/admin/upload-questions', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+
+        if (data.success && data.questions) {
+          questionsBuffer = data.questions;
+          renderQuestionsBuffer();
+          statusDiv.style.color = '#34d399';
+          statusDiv.textContent = `Successfully imported ${data.count} question items!`;
+        } else {
+          statusDiv.style.color = 'var(--status-danger)';
+          statusDiv.textContent = data.message || 'Failed to parse questions file.';
+        }
+      } catch (err) {
+        statusDiv.style.color = 'var(--status-danger)';
+        statusDiv.textContent = 'Error uploading questions file.';
+      }
+    }
+
+    function addQuestionField() {
+      const qObj = {
+        id: 'q-' + Date.now(),
+        text: '',
+        options: ['', '', '', ''],
+        correctAnswer: 0
+      };
+      questionsBuffer.push(qObj);
+      renderQuestionsBuffer();
+    }
+
+    async function deleteCandidate(id) {
+      if (confirm('Are you sure you want to delete this candidate credential?')) {
+        try {
+          await fetch(`/api/admin/credentials/${id}`, { method: 'DELETE' });
+          fetchCredentials();
+        } catch (e) {
+          alert('Failed to delete candidate.');
+        }
+      }
+    }
+
+    async function deleteSession(sessionKey) {
+      if (confirm('Are you sure you want to delete this live proctoring session?')) {
+        try {
+          await fetch(`/api/admin/sessions/${encodeURIComponent(sessionKey)}`, { method: 'DELETE' });
+          fetchLiveSessions();
+        } catch (e) {
+          alert('Failed to delete session.');
+        }
+      }
+    }
+
+    async function deleteResult(id) {
+      if (confirm('Are you sure you want to delete this assessment result record?')) {
+        try {
+          await fetch(`/api/admin/results/${id}`, { method: 'DELETE' });
+          fetchScores();
+        } catch (e) {
+          alert('Failed to delete result record.');
+        }
+      }
+    }
+
+    function deleteQuestionItem(index) {
+      questionsBuffer.splice(index, 1);
+      renderQuestionsBuffer();
+    }
+
+    function updateQuestionCorrectAnswer(index, val) {
+      if (!val) return;
+      const str = String(val).trim().toUpperCase();
+      let num = 0;
+      if (str === 'A' || str === '0' || str === '1') num = 0;
+      else if (str === 'B' || str === '1' || str === '2') num = 1;
+      else if (str === 'C' || str === '2' || str === '3') num = 2;
+      else if (str === 'D' || str === '3' || str === '4') num = 3;
+      else num = parseInt(str, 10) || 0;
+
+      questionsBuffer[index].correctAnswer = Math.min(Math.max(num, 0), 3);
+    }
+
+    function renderQuestionsBuffer() {
+      const container = document.getElementById('editor-questions-list');
+      container.innerHTML = '';
+
+      questionsBuffer.forEach((q, idx) => {
+        const box = document.createElement('div');
+        box.style.cssText = 'background: rgba(15, 23, 42, 0.5); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--border-color); position: relative;';
+        box.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">Item ${idx + 1}</div>
+            <button class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;" onclick="deleteQuestionItem(${idx})">Remove Item 🗑️</button>
+          </div>
+          <input type="text" class="form-input" style="margin-bottom: 0.5rem;" placeholder="Question Prompt..." value="${q.text}" onchange="questionsBuffer[${idx}].text = this.value">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+            <input type="text" class="form-input" placeholder="Option 1" value="${q.options[0]}" onchange="questionsBuffer[${idx}].options[0] = this.value">
+            <input type="text" class="form-input" placeholder="Option 2" value="${q.options[1]}" onchange="questionsBuffer[${idx}].options[1] = this.value">
+            <input type="text" class="form-input" placeholder="Option 3" value="${q.options[2]}" onchange="questionsBuffer[${idx}].options[2] = this.value">
+            <input type="text" class="form-input" placeholder="Option 4" value="${q.options[3]}" onchange="questionsBuffer[${idx}].options[3] = this.value">
+          </div>
+          <div style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+            <span>Correct Option Key (A, B, C, D or 0-3):</span>
+            <input type="text" value="${['A', 'B', 'C', 'D'][q.correctAnswer] || 'A'}" style="width: 70px; padding: 0.3rem 0.5rem; text-transform: uppercase; font-weight: 700; text-align: center;" onchange="updateQuestionCorrectAnswer(${idx}, this.value)">
+          </div>
+        `;
+        container.appendChild(box);
+      });
+    }
+
+    async function saveQuiz() {
+      const title = document.getElementById('quiz-title-input').value.trim();
+      const description = document.getElementById('quiz-desc-input').value.trim();
+      const timeLimitMinutes = document.getElementById('quiz-time-input').value;
+
+      if (!title) {
+        alert('Please enter assessment title.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/quizzes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title,
+            description,
+            timeLimitMinutes,
+            questions: questionsBuffer
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeQuizEditor();
+          fetchQuizzes();
+        }
+      } catch (e) {
+        alert('Failed to save assessment module.');
+      }
+    }
+
+    async function deleteQuiz(id) {
+      if (confirm('Delete this assessment module?')) {
+        await fetch(`/api/admin/quizzes/${id}`, { method: 'DELETE' });
+        fetchQuizzes();
+      }
+    }
+
+    async function fetchScores() {
+      try {
+        const res = await fetch('/api/admin/results');
+        const results = await res.json();
+        const tbody = document.getElementById('scores-table-body');
+        tbody.innerHTML = '';
+
+        if (!Array.isArray(results) || results.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--text-muted);">No candidate credentials found in directory.</td></tr>';
+          return;
+        }
+
+        results.forEach(r => {
+          const tr = document.createElement('tr');
+
+          let badgeClass = 'badge-secondary';
+          let badgeStyle = 'background: rgba(148, 163, 184, 0.15); color: #94a3b8;';
+
+          if (r.status === 'COMPLETED' || r.status === 'PASSED') {
+            badgeClass = 'badge-green';
+            badgeStyle = '';
+          } else if (r.status === 'IN_PROGRESS') {
+            badgeClass = 'badge-amber';
+            badgeStyle = '';
+          } else if (r.status === 'BLOCKED' || r.status === 'DISQUALIFIED') {
+            badgeClass = 'badge-red';
+            badgeStyle = '';
+          }
+
+          tr.innerHTML = `
+            <td><strong style="color: #fff;">${r.studentName}</strong></td>
+            <td>${r.rollNumber}</td>
+            <td>${r.quizTitle}</td>
+            <td><strong style="color: var(--primary-400); font-family: var(--font-mono);">${r.scoreDisplay}</strong></td>
+            <td>${r.durationDisplay}</td>
+            <td><span class="badge ${r.violationsCount > 0 ? 'badge-amber' : 'badge-green'}">${r.violationsCount} Focus Losses</span></td>
+            <td><span class="badge ${badgeClass}" style="${badgeStyle}">${r.status}</span></td>
+            <td>${r.submittedAtDisplay}</td>
+            <td>
+              ${r.resultId ? `<button class="btn btn-secondary btn-sm" onclick="deleteResult('${r.resultId}')">Delete 🗑️</button>` : '<span style="color: var(--text-muted); font-size: 0.8rem;">-</span>'}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {}
+    }
+
+    // Interactive Security Particle Constellation Canvas Effect
+    (function initParticleCanvas() {
+      const canvas = document.getElementById('bg-grid-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particles = [];
+      const particleCount = 45;
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          size: Math.random() * 2 + 1,
+          alpha: Math.random() * 0.5 + 0.2
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < particleCount; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+          ctx.fill();
+
+          for (let j = i + 1; j < particleCount; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 130) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `rgba(14, 165, 233, ${0.15 * (1 - dist / 130)})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+  </script>
+</body>
+</html>

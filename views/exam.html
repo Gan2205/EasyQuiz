@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Environment - EasyQuiz</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/security.js"></script>
+</head>
+<body class="unselectable">
+  <!-- Ambient Dynamic Glowing Mesh Background Orbs -->
+  <div class="ambient-glow-wrapper">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+    <div class="glow-orb orb-4"></div>
+  </div>
+
+  <!-- Interactive Security Grid Canvas -->
+  <canvas id="bg-grid-canvas" class="bg-grid-canvas"></canvas>
+
+  <!-- Navigation Header -->
+  <nav class="navbar">
+    <div class="brand">
+      <div class="brand-shield-icon glow-pulse-shield">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-title" id="quiz-header-title">EasyQuiz Proctored Room</span>
+        <span class="brand-subtitle">Assessment Security Engine v1.0</span>
+      </div>
+    </div>
+
+    <div class="nav-controls">
+      <div id="telemetry-badge" class="badge badge-green glow-badge">
+        <span class="pulse-dot"></span> PROCTORING ACTIVE
+      </div>
+      <div id="timer-display" class="timer-box glass-timer-box hidden">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span id="time-remaining">00:00</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Workspace -->
+  <main class="container" style="position: relative; z-index: 10;">
+    <!-- 1. Assessment Selection Screen -->
+    <div id="quiz-select-screen" class="glass-card ultra-glass-card" style="max-width: 720px; margin: 2rem auto;">
+      <div class="glass-card-shine"></div>
+      <h2 style="font-size: 1.45rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem;">Assigned Examinations</h2>
+      <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Select an authorized assessment module below to launch the proctored test environment.</p>
+
+      <div id="student-info-bar" style="background: rgba(15, 23, 42, 0.6); padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.5rem; display: flex; justify-content: space-between; font-size: 0.9rem;">
+        <div><span style="color: var(--text-muted);">Candidate:</span> <strong id="student-name-display" style="color: #fff;">Loading...</strong></div>
+        <div><span style="color: var(--text-muted);">Register Number:</span> <strong id="student-roll-display" style="color: var(--primary-400);">Loading...</strong></div>
+      </div>
+
+      <div id="quiz-list-container" style="display: flex; flex-direction: column; gap: 1rem;">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+    <!-- 2. Active Proctored Assessment Room -->
+    <div id="exam-active-screen" class="exam-layout hidden">
+      <!-- Question Card Panel -->
+      <div class="glass-card ultra-glass-card">
+        <div class="glass-card-shine"></div>
+        <div class="question-number">Question <span id="current-q-num">1</span> of <span id="total-q-num">5</span></div>
+        <h2 id="question-text" class="question-title">Loading Question Content...</h2>
+
+        <div id="options-container" class="option-list">
+          <!-- Injected dynamically -->
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2.25rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+          <div style="display: flex; gap: 0.75rem;">
+            <button id="prev-btn" class="btn btn-secondary" onclick="navigateQuestion(-1)">← Previous</button>
+            <button id="next-btn" class="btn btn-secondary" onclick="navigateQuestion(1)">Next →</button>
+          </div>
+          <button id="submit-btn" class="btn btn-primary glass-btn-shimmer" onclick="confirmSubmitExam()">Submit Assessment</button>
+        </div>
+      </div>
+
+      <!-- Right Side Question Navigator -->
+      <div class="glass-card ultra-glass-card">
+        <div class="glass-card-shine"></div>
+        <h3 style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 1rem; letter-spacing: -0.2px;">Question Navigator</h3>
+        <div id="palette-grid" class="palette-grid">
+          <!-- Injected dynamically -->
+        </div>
+
+        <div style="margin-top: 2rem; font-size: 0.8rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.6rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="width: 10px; height: 10px; border-radius: 3px; background: rgba(16, 185, 129, 0.3); border: 1px solid var(--status-success);"></span> Answered
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="width: 10px; height: 10px; border-radius: 3px; background: rgba(30, 41, 59, 0.5); border: 1px solid var(--border-color);"></span> Unanswered
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. EXAM ACCESS SUSPENDED / LOCKED OUT OVERLAY -->
+    <div id="exam-blocked-screen" class="glass-card locked-card hidden" style="max-width: 620px; margin: 2.5rem auto; text-align: center;">
+      <div style="width: 64px; height: 64px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: var(--status-danger);">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          <line x1="8" y1="15" x2="16" y2="15"/>
+        </svg>
+      </div>
+
+      <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--status-danger); margin-bottom: 0.5rem; letter-spacing: -0.3px;">
+        Assessment Access Suspended
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+        Your examination session has been suspended due to an unpermitted security policy violation.
+      </p>
+
+      <div style="background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem; text-align: left; font-size: 0.875rem;">
+        <div style="margin-bottom: 0.4rem;"><strong style="color: var(--text-secondary);">Incident Ref ID:</strong> <span style="font-family: var(--font-mono); color: var(--primary-400);" id="blocked-ticket-id">#SEC-2026-LOCKOUT</span></div>
+        <div style="margin-bottom: 0.4rem;"><strong style="color: var(--text-secondary);">Candidate:</strong> <span id="blocked-student-name" style="color: #fff;">--</span></div>
+        <div style="margin-bottom: 0.4rem;"><strong style="color: var(--text-secondary);">Violation Category:</strong> <span id="blocked-reason-text" style="color: var(--status-danger);">Exceeded focus-loss allowance (2 violations detected).</span></div>
+        <div><strong style="color: var(--text-secondary);">Security Protocol:</strong> <span class="badge badge-red">LOCKOUT ACTIVE</span></div>
+      </div>
+
+      <div style="background: rgba(15, 23, 42, 0.6); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem; text-align: left; border: 1px solid var(--border-color);">
+        <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-400); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.5rem;">
+          Authorization & Unlock Instructions
+        </div>
+        <ol style="font-size: 0.85rem; color: var(--text-muted); padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.35rem;">
+          <li>Contact your designated Exam Administrator or Invigilator.</li>
+          <li>The Administrator can issue an instant remote unblock signal from the Administrator Console.</li>
+          <li>Alternatively, enter the Administrator Authorization Key below for manual override.</li>
+        </ol>
+      </div>
+
+      <!-- Master Code Input -->
+      <div style="display: flex; gap: 0.6rem; max-width: 420px; margin: 0 auto 0.75rem;">
+        <input type="password" id="admin-master-code-input" class="form-input" placeholder="Enter Administrator Override Key">
+        <button class="btn btn-primary" onclick="submitMasterUnlockCode()">Authorize 🔑</button>
+      </div>
+      <div id="unlock-code-error" class="hidden" style="color: var(--status-danger); font-size: 0.85rem;">
+        Invalid Override Key. Access remains restricted.
+      </div>
+    </div>
+
+    <!-- 3b. UNBLOCK FULLSCREEN RE-ENTRY MODAL -->
+    <div id="unblock-fullscreen-modal" class="modal-overlay hidden" style="z-index: 9999;">
+      <div class="modal-content glass-card" style="max-width: 480px; text-align: center; border: 1px solid var(--primary-500);">
+        <div style="width: 56px; height: 56px; background: rgba(16, 185, 129, 0.15); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; color: var(--status-success); margin-bottom: 1rem;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem;">Assessment Unlocked</h3>
+        <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.5;">
+          Administrator unblock authorization received. Click below to re-enter mandatory Fullscreen mode and continue your assessment.
+        </p>
+        <button class="btn btn-primary" style="width: 100%; padding: 0.85rem;" onclick="resumeProctoredExamWithFullscreen()">
+          Resume Assessment & Enter Fullscreen ⛶
+        </button>
+      </div>
+    </div>
+
+    <!-- 4. Examination Results Screen -->
+    <div id="exam-results-screen" class="glass-card hidden" style="max-width: 580px; margin: 3rem auto; text-align: center;">
+      <div style="width: 64px; height: 64px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: var(--status-success);">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+
+      <h2 style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; letter-spacing: -0.3px;">Assessment Concluded</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; line-height: 1.6;">
+        Your responses and proctoring audit log have been securely committed to the institutional data store.<br>
+        <span style="color: var(--primary-400); font-weight: 600;">Results and scores will be reviewed by your Administrator.</span>
+      </p>
+
+      <a href="/" class="btn btn-primary" style="padding: 0.9rem 2rem;">Return to Portal Home</a>
+    </div>
+
+    <!-- Futuristic "Entering Secure Environment" Launch Overlay -->
+    <div id="secure-environment-launch-overlay" class="modal-overlay hidden" style="background: rgba(3, 7, 18, 0.96); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); z-index: 9999;">
+      <div class="secure-launch-card ultra-glass-card">
+        <div class="glass-card-shine"></div>
+
+        <!-- Cyber Radar Shield Spinner -->
+        <div class="launch-radar-wrapper">
+          <div class="launch-radar-ring ring-1"></div>
+          <div class="launch-radar-ring ring-2"></div>
+          <div class="launch-radar-ring ring-3"></div>
+          <div class="launch-shield-icon">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+        </div>
+
+        <h2 class="secure-launch-title">ENTERING SECURE ENVIRONMENT</h2>
+        <p class="secure-launch-subtitle">Enforcing EasyQuiz Proctoring Lockdown Shield & Radar...</p>
+
+        <!-- Step-by-Step Protocol Checklist -->
+        <div class="protocol-checklist">
+          <div class="protocol-item" id="p-step-1">
+            <span class="p-icon">⏳</span>
+            <span class="p-text">1. Initializing EasyQuiz Proctoring Security Engine</span>
+          </div>
+          <div class="protocol-item" id="p-step-2">
+            <span class="p-icon">⏳</span>
+            <span class="p-text">2. Enforcing Fullscreen Lock & Viewport Constraints</span>
+          </div>
+          <div class="protocol-item" id="p-step-3">
+            <span class="p-icon">⏳</span>
+            <span class="p-text">3. Trapping System Hotkeys & Suppressing OS Overlays</span>
+          </div>
+          <div class="protocol-item" id="p-step-4">
+            <span class="p-icon">⏳</span>
+            <span class="p-text">4. Engaging Anti-Cheat Browser Extension Shield</span>
+          </div>
+          <div class="protocol-item" id="p-step-5">
+            <span class="p-icon">⏳</span>
+            <span class="p-text">5. Environment Verified! Launching Proctored Room...</span>
+          </div>
+        </div>
+
+        <!-- Neon Progress Bar -->
+        <div class="launch-progress-bar-bg">
+          <div id="launch-progress-fill" class="launch-progress-bar-fill"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentStudent = null;
+    let currentQuiz = null;
+    let currentQuestionIndex = 0;
+    let studentAnswers = {};
+    let timerInterval = null;
+    let timeSpentSeconds = 0;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const storedStudent = localStorage.getItem('proctor_student');
+      if (!storedStudent) {
+        window.location.href = '/';
+        return;
+      }
+      currentStudent = JSON.parse(storedStudent);
+      document.getElementById('student-name-display').textContent = currentStudent.name;
+      document.getElementById('student-roll-display').textContent = (currentStudent.rollNumber || '').split('@')[0];
+      document.getElementById('blocked-student-name').textContent = currentStudent.name;
+      document.getElementById('blocked-ticket-id').textContent = `#SEC-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      loadAvailableQuizzes();
+    });
+
+    async function loadAvailableQuizzes() {
+      try {
+        const res = await fetch('/api/quizzes');
+        const quizzes = await res.json();
+        const container = document.getElementById('quiz-list-container');
+        container.innerHTML = '';
+
+        quizzes.forEach(q => {
+          const card = document.createElement('div');
+          card.style.cssText = 'background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;';
+          card.innerHTML = `
+            <div>
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: #fff;">${q.title}</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">${q.description}</p>
+              <div style="font-size: 0.8rem; color: var(--primary-400); margin-top: 0.5rem; display: flex; gap: 1rem;">
+                <span>⏱️ Duration: ${q.timeLimitMinutes} Mins</span>
+                <span>❓ Items: ${q.questions.length}</span>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="initiateExam('${q.id}')">Launch Assessment</button>
+          `;
+          container.appendChild(card);
+        });
+      } catch (e) {
+        console.error('Failed to load quizzes:', e);
+      }
+    }
+
+    async function initiateExam(quizId) {
+      try {
+        const res = await fetch('/api/exam/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: currentStudent.username, quizId })
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          alert(data.message || 'Failed to initialize session.');
+          return;
+        }
+
+        currentQuiz = data.quiz;
+        studentAnswers = data.session.answers || {};
+
+        SecurityEngine.init(currentStudent.username, quizId, {
+          onLockout: (reason) => {
+            showBlockedScreen(reason);
+          },
+          onUnblock: () => {
+            hideBlockedScreen();
+          }
+        });
+
+        if (data.session.status === 'BLOCKED') {
+          showBlockedScreen(data.session.blockedReason);
+          return;
+        }
+
+        // Play Cinematic "Entering Secure Environment" Animation Overlay
+        await playSecureLaunchAnimation();
+
+        await SecurityEngine.startProctoring();
+
+        document.getElementById('quiz-select-screen').classList.add('hidden');
+        document.getElementById('exam-active-screen').classList.remove('hidden');
+        document.getElementById('timer-display').classList.remove('hidden');
+        document.getElementById('quiz-header-title').textContent = currentQuiz.title;
+
+        startTimer(currentQuiz.timeLimitMinutes * 60);
+        renderCurrentQuestion();
+        renderPalette();
+      } catch (err) {
+        alert('Server connection error initiating session.');
+      }
+    }
+
+    async function playSecureLaunchAnimation() {
+      const overlay = document.getElementById('secure-environment-launch-overlay');
+      const progressFill = document.getElementById('launch-progress-fill');
+      overlay.classList.remove('hidden');
+      progressFill.style.width = '0%';
+
+      const steps = [
+        { id: 'p-step-1', progress: '20%' },
+        { id: 'p-step-2', progress: '45%' },
+        { id: 'p-step-3', progress: '65%' },
+        { id: 'p-step-4', progress: '85%' },
+        { id: 'p-step-5', progress: '100%' }
+      ];
+
+      for (let i = 0; i < steps.length; i++) {
+        const item = document.getElementById(steps[i].id);
+        if (item) {
+          item.className = 'protocol-item active';
+          const iconEl = item.querySelector('.p-icon');
+          if (iconEl) iconEl.textContent = '⚡';
+        }
+        if (progressFill) progressFill.style.width = steps[i].progress;
+
+        await new Promise(r => setTimeout(r, 420));
+
+        if (item) {
+          item.className = 'protocol-item completed';
+          const iconEl = item.querySelector('.p-icon');
+          if (iconEl) iconEl.textContent = '✔';
+        }
+      }
+
+      await new Promise(r => setTimeout(r, 300));
+      overlay.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      overlay.style.opacity = '0';
+      overlay.style.transform = 'scale(1.05)';
+
+      await new Promise(r => setTimeout(r, 400));
+      overlay.classList.add('hidden');
+      overlay.style.opacity = '1';
+      overlay.style.transform = 'scale(1)';
+    }
+
+    function renderCurrentQuestion() {
+      const q = currentQuiz.questions[currentQuestionIndex];
+      document.getElementById('current-q-num').textContent = currentQuestionIndex + 1;
+      document.getElementById('total-q-num').textContent = currentQuiz.questions.length;
+      document.getElementById('question-text').textContent = q.text;
+
+      const optsContainer = document.getElementById('options-container');
+      optsContainer.innerHTML = '';
+
+      q.options.forEach((optText, optIdx) => {
+        const item = document.createElement('div');
+        const isSelected = studentAnswers[q.id] === optIdx;
+        item.className = `option-item ${isSelected ? 'selected' : ''}`;
+        item.innerHTML = `
+          <input type="radio" name="opt-${q.id}" class="option-radio" ${isSelected ? 'checked' : ''}>
+          <span style="font-size: 0.95rem; color: ${isSelected ? '#fff' : 'var(--text-secondary)'};">${optText}</span>
+        `;
+        item.onclick = () => selectOption(q.id, optIdx);
+        optsContainer.appendChild(item);
+      });
+
+      // Update Navigation & Submit Button State
+      const isFirst = currentQuestionIndex === 0;
+      const isLast = currentQuestionIndex === currentQuiz.questions.length - 1;
+      
+      document.getElementById('prev-btn').disabled = isFirst;
+      document.getElementById('prev-btn').style.opacity = isFirst ? '0.4' : '1';
+
+      document.getElementById('next-btn').disabled = isLast;
+      document.getElementById('next-btn').style.opacity = isLast ? '0.4' : '1';
+
+      // Submit button ACTIVE ONLY on the last question
+      const submitBtn = document.getElementById('submit-btn');
+      if (isLast) {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        submitBtn.style.cursor = 'pointer';
+        submitBtn.style.pointerEvents = 'auto';
+        submitBtn.title = 'Click to submit assessment';
+      } else {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.35';
+        submitBtn.style.cursor = 'not-allowed';
+        submitBtn.style.pointerEvents = 'none';
+        submitBtn.title = 'Submit Assessment unlocks on the last question';
+      }
+
+      renderPalette();
+    }
+
+    function selectOption(qId, optIdx) {
+      studentAnswers[qId] = optIdx;
+      renderCurrentQuestion();
+    }
+
+    function navigateQuestion(delta) {
+      const nextIdx = currentQuestionIndex + delta;
+      if (nextIdx >= 0 && nextIdx < currentQuiz.questions.length) {
+        currentQuestionIndex = nextIdx;
+        renderCurrentQuestion();
+      }
+    }
+
+    function renderPalette() {
+      const grid = document.getElementById('palette-grid');
+      grid.innerHTML = '';
+      currentQuiz.questions.forEach((q, idx) => {
+        const btn = document.createElement('button');
+        const isAnswered = studentAnswers[q.id] !== undefined;
+        const isActive = idx === currentQuestionIndex;
+        btn.className = `palette-btn ${isAnswered ? 'answered' : ''} ${isActive ? 'active' : ''}`;
+        btn.textContent = idx + 1;
+        btn.onclick = () => {
+          currentQuestionIndex = idx;
+          renderCurrentQuestion();
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    function startTimer(seconds) {
+      let remaining = seconds;
+      const timerDisplay = document.getElementById('time-remaining');
+      const timerBox = document.getElementById('timer-display');
+
+      if (timerInterval) clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        remaining--;
+        timeSpentSeconds++;
+
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+        if (remaining <= 300) {
+          timerBox.classList.add('warning');
+        }
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          alert('Allocated exam duration concluded. Auto-submitting responses.');
+          submitExam();
+        }
+      }, 1000);
+    }
+
+    async function confirmSubmitExam() {
+      const isLast = currentQuestionIndex === currentQuiz.questions.length - 1;
+      if (!isLast) {
+        alert('The Submit Assessment button is inactive. You must navigate to the last question to submit.');
+        return;
+      }
+      if (confirm('Are you sure you want to submit your assessment responses?')) {
+        submitExam();
+      }
+    }
+
+    async function submitExam() {
+      if (timerInterval) clearInterval(timerInterval);
+      SecurityEngine.stopProctoring();
+
+      try {
+        const res = await fetch('/api/exam/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: currentStudent.username,
+            quizId: currentQuiz.id,
+            answers: studentAnswers,
+            timeSpentSeconds
+          })
+        });
+        const data = await res.json();
+
+        document.getElementById('exam-active-screen').classList.add('hidden');
+        document.getElementById('timer-display').classList.add('hidden');
+        document.getElementById('exam-results-screen').classList.remove('hidden');
+      } catch (err) {
+        alert('Communication error submitting responses.');
+      }
+    }
+
+    function showBlockedScreen(reason) {
+      if (timerInterval) clearInterval(timerInterval);
+      document.getElementById('quiz-select-screen').classList.add('hidden');
+      document.getElementById('exam-active-screen').classList.add('hidden');
+      document.getElementById('timer-display').classList.add('hidden');
+
+      const blockedScreen = document.getElementById('exam-blocked-screen');
+      document.getElementById('blocked-reason-text').textContent = reason || 'Exceeded focus loss tolerance.';
+      blockedScreen.classList.remove('hidden');
+
+      document.getElementById('telemetry-badge').className = 'badge badge-red';
+      document.getElementById('telemetry-badge').innerHTML = '<span class="pulse-dot"></span> ACCESS RESTRICTED';
+    }
+
+    function hideBlockedScreen() {
+      document.getElementById('exam-blocked-screen').classList.add('hidden');
+      document.getElementById('unblock-fullscreen-modal').classList.remove('hidden');
+    }
+
+    async function resumeProctoredExamWithFullscreen() {
+      document.getElementById('unblock-fullscreen-modal').classList.add('hidden');
+      document.getElementById('exam-active-screen').classList.remove('hidden');
+      document.getElementById('timer-display').classList.remove('hidden');
+
+      document.getElementById('telemetry-badge').className = 'badge badge-green';
+      document.getElementById('telemetry-badge').innerHTML = '<span class="pulse-dot"></span> PROCTORING ACTIVE';
+
+      await SecurityEngine.startProctoring();
+      startTimer(currentQuiz.timeLimitMinutes * 60 - timeSpentSeconds);
+    }
+
+    async function submitMasterUnlockCode() {
+      const codeInput = document.getElementById('admin-master-code-input');
+      const errorDiv = document.getElementById('unlock-code-error');
+      errorDiv.classList.add('hidden');
+
+      const res = await SecurityEngine.unblockManually(codeInput.value.trim());
+      if (!res.success) {
+        errorDiv.textContent = res.message || 'Invalid Override Key.';
+        errorDiv.classList.add('hidden');
+      }
+    }
+
+    // Interactive Security Particle Constellation Canvas Effect
+    (function initParticleCanvas() {
+      const canvas = document.getElementById('bg-grid-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particles = [];
+      const particleCount = 45;
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          size: Math.random() * 2 + 1,
+          alpha: Math.random() * 0.5 + 0.2
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < particleCount; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+          ctx.fill();
+
+          for (let j = i + 1; j < particleCount; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 130) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `rgba(14, 165, 233, ${0.15 * (1 - dist / 130)})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+  </script>
+</body>
+</html>

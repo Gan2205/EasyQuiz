@@ -1,0 +1,181 @@
+{
+  "admin": {
+    "username": "SCRS",
+    "password": "SCRS@2026"
+  },
+  "quizzes": [
+    {
+      "id": "quiz-1787864784407",
+      "title": "sam alp",
+      "description": "",
+      "timeLimitMinutes": 15,
+      "questions": [
+        {
+          "id": "q-1787864749833-0",
+          "text": "what is the meaning of OG?",
+          "options": [
+            "original gangster",
+            "original goon",
+            "original gun",
+            "none"
+          ],
+          "correctAnswer": 0
+        },
+        {
+          "id": "q-1787864749833-1",
+          "text": "who is monkey.d.luffy?",
+          "options": [
+            "king of pirates",
+            "god of pirates",
+            "pirate",
+            "human"
+          ],
+          "correctAnswer": 1
+        },
+        {
+          "id": "q-1787864749833-2",
+          "text": "who is father of Naruto?",
+          "options": [
+            "minato",
+            "kakashi",
+            "jiraya",
+            "madara"
+          ],
+          "correctAnswer": 0
+        },
+        {
+          "id": "q-1787864749833-3",
+          "text": "who is CM of Ap",
+          "options": [
+            "NCB",
+            "YSR",
+            "jagan",
+            "lokesh"
+          ],
+          "correctAnswer": 3
+        }
+      ]
+    }
+  ],
+  "students": [
+    {
+      "id": "stu-1787853014125-122",
+      "name": "Ganesh",
+      "rollNumber": "99230040791@klu.ac.in",
+      "username": "ganesh",
+      "password": "6xWtY3mS",
+      "createdAt": "2026-08-27T17:50:14.125Z"
+    },
+    {
+      "id": "stu-1787853014126-786",
+      "name": "dhanush",
+      "rollNumber": "99230040792@klu.ac.in",
+      "username": "dhanush",
+      "password": "tN8UAsxp",
+      "createdAt": "2026-08-27T17:50:14.126Z"
+    },
+    {
+      "id": "stu-1787853014126-533",
+      "name": "rahul",
+      "rollNumber": "99230040546@klu.ac.in",
+      "username": "rahul",
+      "password": "KffK64kb",
+      "createdAt": "2026-08-27T17:50:14.126Z"
+    }
+  ],
+  "sessions": {
+    "rahul_quiz-1787864784407": {
+      "sessionKey": "rahul_quiz-1787864784407",
+      "username": "rahul",
+      "studentName": "rahul",
+      "rollNumber": "99230040546@klu.ac.in",
+      "quizId": "quiz-1787864784407",
+      "quizTitle": "sam alp",
+      "startTime": 1787864909941,
+      "timeLimitMinutes": 15,
+      "status": "COMPLETED",
+      "tabSwitchCount": 0,
+      "violations": [
+        {
+          "type": "BLOCKED_KEY",
+          "details": "Ctrl+C shortcut trapped",
+          "timestamp": "2:38:40 am"
+        }
+      ],
+      "answers": {},
+      "jumbledQuestions": [
+        {
+          "id": "q-1787864749833-0",
+          "text": "what is the meaning of OG?",
+          "options": [
+            "original goon",
+            "none",
+            "original gun",
+            "original gangster"
+          ],
+          "correctAnswer": 3
+        },
+        {
+          "id": "q-1787864749833-3",
+          "text": "who is CM of Ap",
+          "options": [
+            "jagan",
+            "YSR",
+            "NCB",
+            "lokesh"
+          ],
+          "correctAnswer": 3
+        },
+        {
+          "id": "q-1787864749833-2",
+          "text": "who is father of Naruto?",
+          "options": [
+            "jiraya",
+            "kakashi",
+            "minato",
+            "madara"
+          ],
+          "correctAnswer": 2
+        },
+        {
+          "id": "q-1787864749833-1",
+          "text": "who is monkey.d.luffy?",
+          "options": [
+            "human",
+            "king of pirates",
+            "god of pirates",
+            "pirate"
+          ],
+          "correctAnswer": 2
+        }
+      ],
+      "finalScore": 100
+    }
+  },
+  "results": [
+    {
+      "id": "res-1787864933055",
+      "sessionKey": "rahul_quiz-1787864784407",
+      "username": "rahul",
+      "studentName": "rahul",
+      "rollNumber": "99230040546@klu.ac.in",
+      "quizId": "quiz-1787864784407",
+      "quizTitle": "sam alp",
+      "score": 4,
+      "totalQuestions": 4,
+      "percentage": 100,
+      "timeSpentSeconds": 17,
+      "tabSwitchCount": 0,
+      "violationsCount": 1,
+      "violations": [
+        {
+          "type": "BLOCKED_KEY",
+          "details": "Ctrl+C shortcut trapped",
+          "timestamp": "2:38:40 am"
+        }
+      ],
+      "status": "PASSED",
+      "submittedAt": "2026-08-27T21:08:53.055Z"
+    }
+  ]
+}

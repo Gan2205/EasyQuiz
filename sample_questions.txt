@@ -1,0 +1,27 @@
+Q1. Which transport layer protocol provides connectionless and unreliable communication?
+A) TCP
+B) UDP
+C) ICMP
+D) BGP
+Answer: B
+
+Q2. What is the primary purpose of a Firewall in network security?
+A) Accelerating web page load speeds
+B) Filtering network traffic based on security rules
+C) Generating SSL certificates
+D) Assigning IP addresses via DHCP
+Answer: B
+
+Q3. In JavaScript, which operator is used to compare both value and type strictly?
+A) ==
+B) =
+C) ===
+D) !===
+Answer: C
+
+Q4. Which SQL command is used to remove all records from a table without logging individual row deletions?
+A) DELETE
+B) TRUNCATE
+C) DROP
+D) REMOVE
+Answer: B

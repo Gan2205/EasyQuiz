@@ -53,20 +53,37 @@ const upload = multer({ dest: UPLOADS_DIR });
 // Store Helper Functions
 function readStore() {
   try {
-    // If running on Vercel and /tmp/store.json does not exist yet, copy initial data/store.json
-    if (IS_VERCEL && !fs.existsSync(STORE_PATH)) {
-      const initialStorePath = path.join(__dirname, 'data', 'store.json');
-      if (fs.existsSync(initialStorePath)) {
-        const initialData = fs.readFileSync(initialStorePath, 'utf8');
-        try { fs.writeFileSync(STORE_PATH, initialData, 'utf8'); } catch (e) {}
+    let raw = null;
+    if (IS_VERCEL) {
+      if (fs.existsSync(STORE_PATH)) {
+        raw = fs.readFileSync(STORE_PATH, 'utf8');
+      } else {
+        const bundledPath = path.join(__dirname, 'data', 'store.json');
+        if (fs.existsSync(bundledPath)) {
+          raw = fs.readFileSync(bundledPath, 'utf8');
+          try { fs.writeFileSync(STORE_PATH, raw, 'utf8'); } catch (e) {}
+        }
+      }
+    } else {
+      if (fs.existsSync(STORE_PATH)) {
+        raw = fs.readFileSync(STORE_PATH, 'utf8');
       }
     }
-    const raw = fs.readFileSync(STORE_PATH, 'utf8');
-    return JSON.parse(raw);
+
+    if (raw) return JSON.parse(raw);
   } catch (err) {
     console.error('Error reading store:', err);
-    return { admin: { username: 'SCRS', password: 'SCRS@2026' }, quizzes: [], students: [], sessions: {}, results: [] };
   }
+
+  // Fallback to bundled data/store.json
+  try {
+    const fallbackPath = path.join(__dirname, 'data', 'store.json');
+    if (fs.existsSync(fallbackPath)) {
+      return JSON.parse(fs.readFileSync(fallbackPath, 'utf8'));
+    }
+  } catch (e) {}
+
+  return { admin: { username: 'SCRS', password: 'SCRS@2026' }, quizzes: [], students: [], sessions: {}, results: [] };
 }
 
 function writeStore(data) {
@@ -120,7 +137,7 @@ if (wss) {
 function broadcastToStudent(username, data) {
   const targetUser = (username || '').toLowerCase();
   for (let [uname, clientWs] of connectedClients.entries()) {
-    if ((uname || '').toLowerCase() === targetUser && clientWs.readyState === WebSocket.OPEN) {
+    if (uname.toLowerCase() === targetUser && clientWs.readyState === WebSocket.OPEN) {
       clientWs.send(JSON.stringify(data));
     }
   }
@@ -128,27 +145,32 @@ function broadcastToStudent(username, data) {
 
 // --- REST API ENDPOINTS ---
 
-// 1. Student Auth
+// 1. Student Auth (Flexible login by Username, Register Number, or Email)
 app.post('/api/auth/student-login', (req, res) => {
   const { username, password } = req.body;
   const store = readStore();
-  
-  const student = store.students.find(s => 
-    s.username.toLowerCase() === (username || '').trim().toLowerCase() && 
-    s.password === (password || '').trim()
-  );
+  const inputUser = (username || '').trim().toLowerCase();
+  const inputPass = (password || '').trim();
+
+  const student = (store.students || []).find(s => {
+    const matchUser = (s.username || '').toLowerCase() === inputUser;
+    const matchRoll = (s.rollNumber || '').toLowerCase() === inputUser;
+    const matchReg = (s.rollNumber || '').split('@')[0].toLowerCase() === inputUser;
+    const matchPass = (s.password || '').trim() === inputPass;
+    return (matchUser || matchRoll || matchReg) && matchPass;
+  });
 
   if (!student) {
-    return res.status(401).json({ success: false, message: 'Invalid Student Username or Password.' });
+    return res.status(401).json({ success: false, message: 'Invalid Candidate Credentials. Check Username/Register Number & Password.' });
   }
 
-  // Return student info without sensitive data & list of quizzes
-  const sanitizeQuizzes = store.quizzes.map(q => ({
+  // Return student info & available quizzes
+  const sanitizeQuizzes = (store.quizzes || []).map(q => ({
     id: q.id,
     title: q.title,
     description: q.description,
     timeLimitMinutes: q.timeLimitMinutes,
-    questionCount: q.questions.length
+    questionCount: q.questions ? q.questions.length : 0
   }));
 
   res.json({
@@ -162,12 +184,17 @@ app.post('/api/auth/student-login', (req, res) => {
 app.post('/api/auth/admin-login', (req, res) => {
   const { username, password } = req.body;
   const store = readStore();
+  const inputUser = (username || '').trim().toLowerCase();
+  const inputPass = (password || '').trim();
 
-  if (username === store.admin.username && password === store.admin.password) {
+  const adminUser = (store.admin && store.admin.username) ? store.admin.username.toLowerCase() : 'scrs';
+  const adminPass = (store.admin && store.admin.password) ? store.admin.password : 'SCRS@2026';
+
+  if ((inputUser === adminUser || inputUser === 'scrs') && inputPass === adminPass) {
     return res.json({ success: true, token: 'admin-session-token-2026' });
   }
 
-  res.status(401).json({ success: false, message: 'Invalid Admin Credentials.' });
+  res.status(401).json({ success: false, message: 'Invalid Administrator Credentials.' });
 });
 
 // 3. Get Quizzes

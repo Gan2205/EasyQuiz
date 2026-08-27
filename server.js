@@ -598,26 +598,35 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => 
   }
 });
 
-// DOCX XML Text Extractor (Pure JS AdmZip Extractor)
+// DOCX XML Paragraph & Line Text Extractor
 function extractTextFromDocxBuffer(buffer) {
   try {
     const zip = new AdmZip(buffer);
-    const zipEntries = zip.getEntries();
-    const docEntry = zipEntries.find(e => e.entryName === 'word/document.xml');
+    const docEntry = zip.getEntries().find(e => e.entryName === 'word/document.xml');
 
     if (docEntry) {
       const xmlText = docEntry.getData().toString('utf8');
-      const matches = xmlText.match(/<w:t[^>]*>(.*?)<\/w:t>/gi);
-      if (matches && matches.length > 0) {
-        return matches.map(m => m.replace(/<[^>]+>/g, '').trim()).filter(t => t.length > 0).join('\n');
+      // Split by paragraph tags <w:p>
+      const paragraphs = xmlText.split(/<\/w:p>/gi);
+      const lines = [];
+
+      paragraphs.forEach(pXml => {
+        const matches = pXml.match(/<w:t[^>]*>(.*?)<\/w:t>/gi);
+        if (matches && matches.length > 0) {
+          const lineText = matches.map(m => m.replace(/<[^>]+>/g, '')).join('').trim();
+          if (lineText.length > 0) lines.push(lineText);
+        }
+      });
+
+      if (lines.length > 0) {
+        return lines.join('\n');
       }
-      return xmlText.replace(/<[^>]+>/g, ' ');
     }
   } catch (e) {
     console.error('Docx ZIP parse error:', e.message);
   }
 
-  // Fallback if raw text
+  // Fallback text extraction
   const rawStr = buffer.toString('utf8');
   const matches = rawStr.match(/<w:t[^>]*>(.*?)<\/w:t>/gi);
   if (matches && matches.length > 0) {
@@ -626,19 +635,23 @@ function extractTextFromDocxBuffer(buffer) {
   return rawStr.replace(/[^\x20-\x7E\r\n]/g, ' ');
 }
 
-// Plain Text / DOCX Question & Options Parser
+// DOCX & Text Question & Options Layout Parser
 function parseQuestionsFromText(text) {
-  const questions = [];
-  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  // Pre-process text to separate inline multi-options (e.g. "a. gangster b. goon" -> "a. gangster\nb. goon")
+  let processedText = (text || '')
+    .replace(/^(\d+)[\.\)]\s*([a-zA-Z0-9])/gm, '$1. $2')
+    .replace(/([^\n])\s+([a-dA-D0-3][\.\)])\s*/g, '$1\n$2 ');
 
+  const rawLines = processedText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  const questions = [];
   let currentQ = null;
 
-  lines.forEach(line => {
-    // Ignore stray XML headers or zip signatures
-    if (line.startsWith('PK') || line.includes('[Content_Types]') || line.includes('schemas.openxmlformats')) return;
+  rawLines.forEach(line => {
+    // Ignore document title lines or ZIP headers
+    if (line.toLowerCase() === 'sample quiz' || line.startsWith('PK') || line.includes('[Content_Types]')) return;
 
-    const isOptionLine = line.match(/^(?:[A-Da-d0-3][\.\)]|\([A-Da-d0-3]\)|Option\s*[1-4]:?)\s*(.*)/i);
     const isQuestionLine = line.match(/^(?:Q\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
+    const isOptionLine = line.match(/^(?:[A-Da-d0-3][\.\)]|\([A-Da-d0-3]\)|Option\s*[1-4]:?)\s*(.*)/i);
 
     if (isOptionLine && currentQ) {
       const optText = isOptionLine[1].trim() || line;
@@ -662,13 +675,6 @@ function parseQuestionsFromText(text) {
       } else {
         currentQ.text += ' ' + line;
       }
-    } else {
-      currentQ = {
-        id: 'q-' + Date.now() + '-' + questions.length,
-        text: line,
-        options: [],
-        correctAnswer: 0
-      };
     }
   });
 

@@ -1,11 +1,22 @@
 {
   "version": 2,
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "{data/store.json,views/**,public/**}"
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "data/store.json",
+          "views/**",
+          "public/**"
+        ]
+      }
     }
-  },
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api" }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
   ]
 }

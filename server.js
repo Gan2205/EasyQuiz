@@ -71,22 +71,26 @@ try {
 // Store Helper Functions
 function readStore() {
   try {
-    if (IS_VERCEL) {
-      if (fs.existsSync(STORE_PATH)) {
-        const raw = fs.readFileSync(STORE_PATH, 'utf8');
-        if (raw) return JSON.parse(raw);
-      } else {
-        try { fs.writeFileSync(STORE_PATH, JSON.stringify(initialBundledStore, null, 2), 'utf8'); } catch (e) {}
-        return initialBundledStore;
-      }
-    } else {
-      if (fs.existsSync(STORE_PATH)) {
-        const raw = fs.readFileSync(STORE_PATH, 'utf8');
-        if (raw) return JSON.parse(raw);
+    let raw = null;
+    if (IS_VERCEL && fs.existsSync(STORE_PATH)) {
+      raw = fs.readFileSync(STORE_PATH, 'utf8');
+    } else if (!IS_VERCEL && fs.existsSync(STORE_PATH)) {
+      raw = fs.readFileSync(STORE_PATH, 'utf8');
+    }
+
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.admin && Array.isArray(parsed.students)) {
+        return parsed;
       }
     }
   } catch (err) {
     console.error('Error reading store:', err);
+  }
+
+  // Attempt to write initial store to /tmp if on Vercel
+  if (IS_VERCEL) {
+    try { fs.writeFileSync(STORE_PATH, JSON.stringify(initialBundledStore, null, 2), 'utf8'); } catch (e) {}
   }
 
   return initialBundledStore;

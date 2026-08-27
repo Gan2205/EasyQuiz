@@ -69,7 +69,7 @@ try {
 let globalMemoryStore = null;
 
 function readStore() {
-  if (globalMemoryStore && Array.isArray(globalMemoryStore.students) && globalMemoryStore.students.length > 0) {
+  if (globalMemoryStore) {
     return globalMemoryStore;
   }
 
@@ -78,7 +78,7 @@ function readStore() {
       const raw = fs.readFileSync(STORE_PATH, 'utf8');
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (parsed && parsed.admin && Array.isArray(parsed.students)) {
+        if (parsed && parsed.admin) {
           globalMemoryStore = parsed;
           return parsed;
         }

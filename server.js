@@ -109,8 +109,10 @@ function writeStore(data) {
     globalMemoryStore = data;
     initialBundledStore = data;
     fs.writeFileSync(STORE_PATH, JSON.stringify(data, null, 2), 'utf8');
-    // Asynchronously sync updates to Firebase Firestore
-    FirebaseService.syncToFirebase(data);
+    // Non-blocking asynchronous background sync to Firebase Firestore
+    setImmediate(() => {
+      FirebaseService.syncToFirebase(data).catch(e => {});
+    });
   } catch (err) {
     console.error('Error writing store:', err);
   }

@@ -101,43 +101,48 @@ const FirebaseService = {
     lastSync: lastSyncTimestamp
   }),
 
-  // Push local store to Firebase Firestore
+  // Push local store to Firebase Firestore in Parallel Concurrent Waves
   syncToFirebase: async (storeData) => {
     lastSyncTimestamp = new Date().toISOString();
     try {
-      // 1. Sync Document: /config/admin
+      const syncTasks = [];
+
+      // 1. Sync Admin Config
       if (storeData.admin) {
-        await makeRequest(`${FIRESTORE_BASE_URL}/config/admin`, 'PATCH', {
+        syncTasks.push(makeRequest(`${FIRESTORE_BASE_URL}/config/admin`, 'PATCH', {
           fields: objectToFirestoreFields(storeData.admin)
+        }));
+      }
+
+      // 2. Sync Quizzes in Parallel
+      if (Array.isArray(storeData.quizzes)) {
+        storeData.quizzes.forEach(quiz => {
+          syncTasks.push(makeRequest(`${FIRESTORE_BASE_URL}/quizzes/${quiz.id}`, 'PATCH', {
+            fields: objectToFirestoreFields(quiz)
+          }));
         });
       }
 
-      // 2. Sync Collection: /quizzes
-      if (Array.isArray(storeData.quizzes)) {
-        for (const quiz of storeData.quizzes) {
-          await makeRequest(`${FIRESTORE_BASE_URL}/quizzes/${quiz.id}`, 'PATCH', {
-            fields: objectToFirestoreFields(quiz)
-          });
-        }
-      }
-
-      // 3. Sync Collection: /students
+      // 3. Sync Students in Parallel
       if (Array.isArray(storeData.students)) {
-        for (const student of storeData.students) {
-          await makeRequest(`${FIRESTORE_BASE_URL}/students/${student.id}`, 'PATCH', {
+        storeData.students.forEach(student => {
+          syncTasks.push(makeRequest(`${FIRESTORE_BASE_URL}/students/${student.id}`, 'PATCH', {
             fields: objectToFirestoreFields(student)
-          });
-        }
+          }));
+        });
       }
 
-      // 4. Sync Collection: /results
+      // 4. Sync Results in Parallel
       if (Array.isArray(storeData.results)) {
-        for (const resItem of storeData.results) {
-          await makeRequest(`${FIRESTORE_BASE_URL}/results/${resItem.id}`, 'PATCH', {
+        storeData.results.forEach(resItem => {
+          syncTasks.push(makeRequest(`${FIRESTORE_BASE_URL}/results/${resItem.id}`, 'PATCH', {
             fields: objectToFirestoreFields(resItem)
-          });
-        }
+          }));
+        });
       }
+
+      // Execute all Firestore REST updates concurrently
+      await Promise.all(syncTasks);
 
       isFirebaseConnected = true;
       return { success: true, timestamp: lastSyncTimestamp };

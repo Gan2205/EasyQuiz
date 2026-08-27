@@ -597,6 +597,153 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => 
   }
 });
 
+// DOCX XML Text Extractor (Lightweight, Serverless-Friendly)
+function extractTextFromDocxBuffer(buffer) {
+  try {
+    const str = buffer.toString('utf8');
+    const matches = str.match(/<w:t[^>]*>(.*?)<\/w:t>/gi);
+    if (matches && matches.length > 0) {
+      return matches.map(m => m.replace(/<[^>]+>/g, '')).join('\n');
+    }
+    return str.replace(/<[^>]+>/g, ' ');
+  } catch (e) {
+    return buffer.toString('utf8');
+  }
+}
+
+// Plain Text / DOCX Question & Options Parser
+function parseQuestionsFromText(text) {
+  const questions = [];
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+
+  let currentQ = null;
+
+  lines.forEach(line => {
+    const qMatch = line.match(/^(?:Q\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
+    const optMatch = line.match(/^(?:[A-Da-d0-3][\.\)]|\([A-Da-d]\))\s*(.*)/i);
+
+    if (optMatch && currentQ) {
+      const optText = optMatch[1].trim();
+      if (currentQ.options.length < 4) {
+        currentQ.options.push(optText);
+      }
+    } else if (qMatch) {
+      if (currentQ && currentQ.text && currentQ.options.length >= 2) {
+        while (currentQ.options.length < 4) currentQ.options.push('None');
+        questions.push(currentQ);
+      }
+      currentQ = {
+        id: 'q-' + Date.now() + '-' + questions.length,
+        text: qMatch[1].trim() || line,
+        options: [],
+        correctAnswer: 0
+      };
+    } else if (currentQ) {
+      if (currentQ.options.length < 4) {
+        currentQ.options.push(line);
+      } else {
+        currentQ.text += ' ' + line;
+      }
+    } else {
+      currentQ = {
+        id: 'q-' + Date.now() + '-' + questions.length,
+        text: line,
+        options: [],
+        correctAnswer: 0
+      };
+    }
+  });
+
+  if (currentQ && currentQ.text) {
+    while (currentQ.options.length < 4) currentQ.options.push('None');
+    questions.push(currentQ);
+  }
+
+  return questions;
+}
+
+// Admin Upload & Parse Questions Document (.docx, .pdf, .txt, .csv, .xlsx, .json)
+app.post(['/api/admin/upload-questions', '/admin/upload-questions'], upload.single('questionFile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'No question document uploaded.' });
+  }
+
+  const filePath = req.file.path;
+  const fileName = req.file.originalname.toLowerCase();
+  let questions = [];
+
+  try {
+    if (fileName.endsWith('.json')) {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const parsed = JSON.parse(content);
+      questions = Array.isArray(parsed) ? parsed : (parsed.questions || []);
+    } else if (fileName.endsWith('.csv') || fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+      const workbook = XLSX.readFile(filePath);
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet);
+
+      rows.forEach((row, idx) => {
+        const keys = Object.keys(row);
+        const qText = row.Question || row.text || row[keys[0]] || `Question ${idx + 1}`;
+        const opt1 = row.Option1 || row['Option 1'] || row.A || row[keys[1]] || 'Option A';
+        const opt2 = row.Option2 || row['Option 2'] || row.B || row[keys[2]] || 'Option B';
+        const opt3 = row.Option3 || row['Option 3'] || row.C || row[keys[3]] || 'Option C';
+        const opt4 = row.Option4 || row['Option 4'] || row.D || row[keys[4]] || 'Option D';
+        
+        let correct = 0;
+        const ans = String(row.CorrectAnswer || row.Answer || row.correct || row[keys[5]] || 'A').toUpperCase();
+        if (ans === 'B' || ans === '1') correct = 1;
+        else if (ans === 'C' || ans === '2') correct = 2;
+        else if (ans === 'D' || ans === '3') correct = 3;
+
+        questions.push({
+          id: `q-${Date.now()}-${idx}`,
+          text: String(qText).trim(),
+          options: [String(opt1).trim(), String(opt2).trim(), String(opt3).trim(), String(opt4).trim()],
+          correctAnswer: correct
+        });
+      });
+    } else {
+      // DOCX, TXT, PDF text parsing
+      const fileBuffer = fs.readFileSync(filePath);
+      let rawText = '';
+
+      if (fileName.endsWith('.docx')) {
+        rawText = extractTextFromDocxBuffer(fileBuffer);
+      } else {
+        rawText = fileBuffer.toString('utf8');
+      }
+
+      questions = parseQuestionsFromText(rawText);
+    }
+
+    try { fs.unlinkSync(filePath); } catch (e) {}
+
+    if (!questions || questions.length === 0) {
+      return res.status(400).json({ success: false, message: `Could not parse questions from ${fileName}.` });
+    }
+
+    res.json({
+      success: true,
+      count: questions.length,
+      questions
+    });
+
+  } catch (err) {
+    try { fs.unlinkSync(filePath); } catch (e) {}
+    console.error('Question Parse Error:', err);
+    res.status(500).json({ success: false, message: `Failed to parse ${fileName} file.` });
+  }
+});
+
+// Admin Download Sample CSV Question Template
+app.get(['/api/admin/sample-question-template', '/admin/sample-question-template'], (req, res) => {
+  const sampleCsv = `Question,Option1,Option2,Option3,Option4,CorrectAnswer\nWhat is the capital of France?,Paris,London,Berlin,Madrid,A\nWhich planet is known as the Red Planet?,Venus,Mars,Jupiter,Saturn,B\nWhat is 5 + 7?,10,11,12,13,C\nWho wrote Hamlet?,Charles Dickens,William Shakespeare,Mark Twain,Leo Tolstoy,B\n`;
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename=Sample_Quiz_Questions_Template.csv');
+  res.status(200).send(sampleCsv);
+});
+
 // Admin Clean Up Duplicate Candidate Credentials
 app.post(['/api/admin/deduplicate-candidates', '/admin/deduplicate-candidates'], (req, res) => {
   const store = readStore();

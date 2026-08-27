@@ -668,6 +668,111 @@ app.get('/api/admin/download-credentials', (req, res) => {
   res.status(200).send(csvContent);
 });
 
+// Admin Get Candidate Attendance & Participation Summary
+app.get('/api/admin/candidate-attendance', (req, res) => {
+  const store = readStore();
+  const students = store.students || [];
+  const results = store.results || [];
+  const sessions = store.sessions || {};
+
+  let completedCount = 0;
+  let inProgressCount = 0;
+  let blockedCount = 0;
+  let notStartedCount = 0;
+
+  const attendanceList = students.map(s => {
+    const username = (s.username || '').toLowerCase();
+    const resultRecord = results.find(r => (r.username || '').toLowerCase() === username);
+
+    let activeSession = null;
+    Object.values(sessions).forEach(sess => {
+      if ((sess.username || '').toLowerCase() === username) activeSession = sess;
+    });
+
+    let status = 'NOT_STARTED';
+    let score = 'N/A';
+    let timeInfo = 'Haven\'t Taken Test';
+
+    if (resultRecord) {
+      status = 'COMPLETED';
+      completedCount++;
+      score = `${resultRecord.percentage}% (${resultRecord.score}/${resultRecord.totalQuestions})`;
+      timeInfo = new Date(resultRecord.submittedAt).toLocaleTimeString();
+    } else if (activeSession) {
+      if (activeSession.status === 'BLOCKED') {
+        status = 'BLOCKED';
+        blockedCount++;
+        timeInfo = 'Exam Suspended';
+      } else {
+        status = 'IN_PROGRESS';
+        inProgressCount++;
+        timeInfo = 'Active Testing';
+      }
+      score = 'In Progress';
+    } else {
+      notStartedCount++;
+    }
+
+    return {
+      name: s.name,
+      rollNumber: s.rollNumber,
+      username: s.username,
+      status,
+      score,
+      timeInfo
+    };
+  });
+
+  res.json({
+    success: true,
+    completedCount,
+    inProgressCount,
+    blockedCount,
+    notStartedCount,
+    attendanceList
+  });
+});
+
+// Admin Download Attendance CSV Report
+app.get('/api/admin/download-attendance', (req, res) => {
+  const store = readStore();
+  const students = store.students || [];
+  const results = store.results || [];
+  const sessions = store.sessions || {};
+
+  let csvContent = 'Candidate Name,Register Number,Username,Status,Score,Time Info\n';
+
+  students.forEach(s => {
+    const username = (s.username || '').toLowerCase();
+    const resultRecord = results.find(r => (r.username || '').toLowerCase() === username);
+
+    let activeSession = null;
+    Object.values(sessions).forEach(sess => {
+      if ((sess.username || '').toLowerCase() === username) activeSession = sess;
+    });
+
+    let status = 'NOT_STARTED';
+    let score = 'N/A';
+    let timeInfo = 'Haven\'t Taken Test';
+
+    if (resultRecord) {
+      status = 'COMPLETED';
+      score = `${resultRecord.percentage}%`;
+      timeInfo = new Date(resultRecord.submittedAt).toLocaleTimeString();
+    } else if (activeSession) {
+      status = activeSession.status === 'BLOCKED' ? 'BLOCKED' : 'IN_PROGRESS';
+      timeInfo = activeSession.status === 'BLOCKED' ? 'Suspended' : 'Active';
+    }
+
+    const regNum = (s.rollNumber || '').split('@')[0];
+    csvContent += `"${s.name}","${regNum}","${s.username}","${status}","${score}","${timeInfo}"\n`;
+  });
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename=Candidate_Attendance_Report.csv');
+  res.status(200).send(csvContent);
+});
+
 // 10. Admin Get Live Sessions & Unblock Control
 app.get('/api/admin/live-sessions', (req, res) => {
   const store = readStore();

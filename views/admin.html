@@ -445,7 +445,7 @@
         if (data.success) {
           adminToken = data.token;
           document.getElementById('admin-login-modal').classList.add('hidden');
-          loadAdminDashboard();
+          try { loadAdminDashboard(); } catch (err) {}
         } else {
           errDiv.textContent = data.message || 'Authentication failed.';
           errDiv.classList.remove('hidden');

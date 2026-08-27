@@ -280,20 +280,35 @@ app.post(['/api/exam/start', '/exam/start'], (req, res) => {
   const { username, quizId } = req.body;
   const store = readStore();
 
-  const quiz = store.quizzes.find(q => q.id === quizId);
-  const student = store.students.find(s => s.username.toLowerCase() === (username || '').toLowerCase());
+  const cleanUser = (username || '').toLowerCase().trim();
+  const cleanRoll = cleanUser.split('@')[0];
 
-  if (!quiz || !student) {
-    return res.status(400).json({ success: false, message: 'Invalid Quiz or Student.' });
+  const quiz = store.quizzes.find(q => q.id === quizId) || store.quizzes[0];
+  const student = store.students.find(s => {
+    if (!s) return false;
+    const u = (s.username || '').toLowerCase();
+    const r = (s.rollNumber || '').toLowerCase();
+    const rClean = r.split('@')[0];
+    const n = (s.name || '').toLowerCase();
+    return u === cleanUser || r === cleanUser || rClean === cleanRoll || n === cleanUser;
+  }) || {
+    id: 'stu-guest-' + Date.now(),
+    name: username || 'Candidate',
+    rollNumber: username || 'N/A',
+    username: username || 'candidate'
+  };
+
+  if (!quiz) {
+    return res.status(400).json({ success: false, message: 'No active quiz module available.' });
   }
 
   // Create fresh session or reset existing session
-  const sessionKey = `${username}_${quizId}`;
+  const sessionKey = `${username}_${quiz.id}`;
   let session = store.sessions[sessionKey];
 
   if (!session || session.status === 'BLOCKED') {
     // Generate Per-Student Jumbled Questions & Shuffled Options
-    const jumbledQuestions = shuffleArray(quiz.questions.map((q, qIdx) => {
+    const jumbledQuestions = shuffleArray((quiz.questions || []).map((q, qIdx) => {
       const qId = q.id || `q-${qIdx}`;
       const originalCorrectIndex = parseInt(q.correctAnswer, 10);
       
@@ -310,7 +325,7 @@ app.post(['/api/exam/start', '/exam/start'], (req, res) => {
         id: qId,
         text: q.text,
         options: newOptions,
-        correctAnswer: newCorrectIndex >= 0 ? newCorrectIndex : originalCorrectIndex
+        correctAnswer: newCorrectIndex >= 0 ? newCorrectIndex : (isNaN(originalCorrectIndex) ? 0 : originalCorrectIndex)
       };
     }));
 
@@ -319,7 +334,7 @@ app.post(['/api/exam/start', '/exam/start'], (req, res) => {
       username,
       studentName: student.name,
       rollNumber: student.rollNumber,
-      quizId,
+      quizId: quiz.id,
       quizTitle: quiz.title,
       startTime: Date.now(),
       timeLimitMinutes: quiz.timeLimitMinutes,

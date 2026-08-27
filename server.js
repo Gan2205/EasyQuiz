@@ -639,8 +639,8 @@ function extractTextFromDocxBuffer(buffer) {
 function parseQuestionsFromText(text) {
   // Pre-process text to separate inline multi-options (e.g. "a. gangster b. goon" -> "a. gangster\nb. goon")
   let processedText = (text || '')
-    .replace(/^(\d+)[\.\)]\s*([a-zA-Z0-9])/gm, '$1. $2')
-    .replace(/([^\n])\s+([a-dA-D0-3][\.\)])\s*/g, '$1\n$2 ');
+    .replace(/(\d+)[\.\)]\s*([a-zA-Z0-9])/g, '$1. $2')
+    .replace(/([^\n])\s+([a-dA-D][\.\)]|\([a-dA-D]\))\s*/g, '$1\n$2 ');
 
   const rawLines = processedText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
   const questions = [];
@@ -650,16 +650,18 @@ function parseQuestionsFromText(text) {
     // Ignore document title lines or ZIP headers
     if (line.toLowerCase() === 'sample quiz' || line.startsWith('PK') || line.includes('[Content_Types]')) return;
 
-    const isQuestionLine = line.match(/^(?:Q\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
-    const isOptionLine = line.match(/^(?:[A-Da-d0-3][\.\)]|\([A-Da-d0-3]\)|Option\s*[1-4]:?)\s*(.*)/i);
+    // Strict Question Line Match: 1., 2., 3., 4., Q1:, Q2:, Question 1:
+    const isQuestionLine = line.match(/^(?:Q(?:uestion)?\s*\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
+    // Strict Option Line Match: a., b., c., d., A., B., C., D., (a), (b), (c), (d), Option A:, Option 1:
+    const isOptionLine = line.match(/^(?:[A-Da-d][\.\)]|\([A-Da-d]\)|Option\s*[A-Da-d1-4]:?)\s*(.*)/i);
 
     if (isOptionLine && currentQ) {
       const optText = isOptionLine[1].trim() || line;
       if (currentQ.options.length < 4) {
         currentQ.options.push(optText);
       }
-    } else if (isQuestionLine && (!currentQ || currentQ.options.length >= 2)) {
-      if (currentQ && currentQ.text && currentQ.options.length >= 2) {
+    } else if (isQuestionLine) {
+      if (currentQ && currentQ.text) {
         while (currentQ.options.length < 4) currentQ.options.push('N/A');
         questions.push(currentQ);
       }

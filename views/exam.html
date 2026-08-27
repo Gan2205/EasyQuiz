@@ -266,20 +266,34 @@
     async function loadAvailableQuizzes() {
       try {
         const res = await fetch('/api/quizzes');
-        const quizzes = await res.json();
+        let quizzes = await res.json();
+
+        if ((!quizzes || quizzes.length === 0) && localStorage.getItem('proctor_quizzes')) {
+          try { quizzes = JSON.parse(localStorage.getItem('proctor_quizzes')); } catch (e) {}
+        }
+
         const container = document.getElementById('quiz-list-container');
         container.innerHTML = '';
 
+        if (!quizzes || quizzes.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 2rem; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px dashed var(--border-color);">
+              <p style="color: var(--text-muted); font-size: 0.9rem;">No active proctored assessment modules assigned currently.</p>
+            </div>
+          `;
+          return;
+        }
+
         quizzes.forEach(q => {
           const card = document.createElement('div');
-          card.style.cssText = 'background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;';
+          card.style.cssText = 'background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;';
           card.innerHTML = `
             <div>
               <h3 style="font-size: 1.05rem; font-weight: 700; color: #fff;">${q.title}</h3>
-              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">${q.description}</p>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">${q.description || 'Institutional Assessment Module'}</p>
               <div style="font-size: 0.8rem; color: var(--primary-400); margin-top: 0.5rem; display: flex; gap: 1rem;">
                 <span>⏱️ Duration: ${q.timeLimitMinutes} Mins</span>
-                <span>❓ Items: ${q.questions.length}</span>
+                <span>❓ Items: ${q.questions ? q.questions.length : (q.questionCount || 0)}</span>
               </div>
             </div>
             <button class="btn btn-primary btn-sm" onclick="initiateExam('${q.id}')">Launch Assessment</button>

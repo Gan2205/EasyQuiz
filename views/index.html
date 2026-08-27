@@ -121,16 +121,6 @@
   </main>
 
   <script>
-    // Force inputs to blank on load to override browser autofill
-    window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        const u = document.getElementById('username');
-        const p = document.getElementById('password');
-        if (u) u.value = '';
-        if (p) p.value = '';
-      }, 100);
-    });
-
     document.getElementById('student-login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('username').value.trim();

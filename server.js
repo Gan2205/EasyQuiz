@@ -50,40 +50,46 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Configure Multer for CSV Uploads
 const upload = multer({ dest: UPLOADS_DIR });
 
+// Require initial store data directly so Vercel NFT bundles store.json
+let initialBundledStore = null;
+try {
+  initialBundledStore = require('./data/store.json');
+} catch (e) {
+  initialBundledStore = {
+    admin: { username: "SCRS", password: "SCRS@2026" },
+    quizzes: [],
+    students: [
+      { id: "stu-1", name: "Ganesh", rollNumber: "99230040791@klu.ac.in", username: "ganesh", password: "6xWtY3mS" },
+      { id: "stu-2", name: "dhanush", rollNumber: "99230040792@klu.ac.in", username: "dhanush", password: "tN8UAsxp" },
+      { id: "stu-3", name: "rahul", rollNumber: "99230040546@klu.ac.in", username: "rahul", password: "KffK64kb" }
+    ],
+    sessions: {},
+    results: []
+  };
+}
+
 // Store Helper Functions
 function readStore() {
   try {
-    let raw = null;
     if (IS_VERCEL) {
       if (fs.existsSync(STORE_PATH)) {
-        raw = fs.readFileSync(STORE_PATH, 'utf8');
+        const raw = fs.readFileSync(STORE_PATH, 'utf8');
+        if (raw) return JSON.parse(raw);
       } else {
-        const bundledPath = path.join(__dirname, 'data', 'store.json');
-        if (fs.existsSync(bundledPath)) {
-          raw = fs.readFileSync(bundledPath, 'utf8');
-          try { fs.writeFileSync(STORE_PATH, raw, 'utf8'); } catch (e) {}
-        }
+        try { fs.writeFileSync(STORE_PATH, JSON.stringify(initialBundledStore, null, 2), 'utf8'); } catch (e) {}
+        return initialBundledStore;
       }
     } else {
       if (fs.existsSync(STORE_PATH)) {
-        raw = fs.readFileSync(STORE_PATH, 'utf8');
+        const raw = fs.readFileSync(STORE_PATH, 'utf8');
+        if (raw) return JSON.parse(raw);
       }
     }
-
-    if (raw) return JSON.parse(raw);
   } catch (err) {
     console.error('Error reading store:', err);
   }
 
-  // Fallback to bundled data/store.json
-  try {
-    const fallbackPath = path.join(__dirname, 'data', 'store.json');
-    if (fs.existsSync(fallbackPath)) {
-      return JSON.parse(fs.readFileSync(fallbackPath, 'utf8'));
-    }
-  } catch (e) {}
-
-  return { admin: { username: 'SCRS', password: 'SCRS@2026' }, quizzes: [], students: [], sessions: {}, results: [] };
+  return initialBundledStore;
 }
 
 function writeStore(data) {

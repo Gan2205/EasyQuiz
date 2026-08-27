@@ -643,7 +643,7 @@ function extractOptionsFromLine(line) {
     .filter(p => p.length > 0);
 }
 
-// DOCX & Text Question & Options Layout Parser (Handles Typos & Multi-Option Lines)
+// DOCX & Text Question & Options Layout Parser (Supports Alphabetic & Numerical Options 1. 2. 3. 4. / 1) 2) 3) 4))
 function parseQuestionsFromText(text, optionFormat = 'auto') {
   if (!text) return [];
 
@@ -654,26 +654,13 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
   rawLines.forEach(line => {
     if (line.toLowerCase() === 'sample quiz' || line.startsWith('PK') || line.includes('[Content_Types]')) return;
 
-    // Strict Question Header Detection (e.g. "1.what...", "2.who...", "3.who...", "4.who...", "Q1:...")
-    const isQuestionHeader = line.match(/^(?:Q(?:uestion)?\s*\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
-    const isOptionLine = line.match(/^(?:[A-Da-d1-4][\.\)]|\([A-Da-d1-4]\)|Option\s*[A-Da-d1-4]:?)\s*/i);
+    const isQuestionPrefix = line.match(/^(?:Q(?:uestion)?\s*\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
+    const isExplicitOptionPrefix = line.match(/^(?:[A-Da-d][\.\)]|\([A-Da-d]\)|Option\s*[A-Da-d1-4]:?)\s*/i);
 
-    if (isQuestionHeader && (!currentQ || currentQ.options.length >= 2 || isQuestionHeader[0].match(/^\d+[\.\)]/))) {
-      if (currentQ && currentQ.text) {
-        while (currentQ.options.length < 4) currentQ.options.push('N/A');
-        questions.push(currentQ);
-      }
+    // If currentQ has no options yet and line starts with "1." or "1)", it's Option 1!
+    const isNumOption1 = currentQ && currentQ.options.length === 0 && line.match(/^(?:1[\.\)]|\(1\))\s*/);
 
-      currentQ = {
-        id: 'q-' + Date.now() + '-' + questions.length,
-        text: isQuestionHeader[1].trim() || line,
-        options: [],
-        correctAnswer: 0
-      };
-      return;
-    }
-
-    if (isOptionLine && currentQ) {
+    if (currentQ && currentQ.options.length < 4 && (isExplicitOptionPrefix || isNumOption1 || (currentQ.options.length > 0 && line.match(/^(?:[2-4][\.\)]|\([2-4]\))\s*/)))) {
       const extractedOpts = extractOptionsFromLine(line);
       extractedOpts.forEach(opt => {
         if (currentQ.options.length < 4) {
@@ -681,6 +668,21 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
         }
       });
       return;
+    }
+
+    if (isQuestionPrefix) {
+      if (currentQ && currentQ.text && (currentQ.options.length >= 2 || !isNumOption1)) {
+        while (currentQ.options.length < 4) currentQ.options.push('N/A');
+        questions.push(currentQ);
+
+        currentQ = {
+          id: 'q-' + Date.now() + '-' + questions.length,
+          text: isQuestionPrefix[1].trim() || line,
+          options: [],
+          correctAnswer: 0
+        };
+        return;
+      }
     }
 
     if (currentQ) {
@@ -696,6 +698,13 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
       } else {
         currentQ.text += ' ' + line;
       }
+    } else {
+      currentQ = {
+        id: 'q-' + Date.now() + '-' + questions.length,
+        text: line,
+        options: [],
+        correctAnswer: 0
+      };
     }
   });
 

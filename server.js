@@ -24,12 +24,17 @@ if (process.platform === 'win32') {
 }
 
 const PORT = process.env.PORT || 3000;
-const STORE_PATH = path.join(__dirname, 'data', 'store.json');
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const IS_VERCEL = !!(process.env.VERCEL || process.env.NOW_BUILDER);
+const STORE_PATH = IS_VERCEL ? path.join('/tmp', 'store.json') : path.join(__dirname, 'data', 'store.json');
+const UPLOADS_DIR = IS_VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'uploads');
 
-// Ensure uploads dir exists
-if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+// Ensure uploads dir exists safely
+try {
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  }
+} catch (e) {
+  console.warn('Uploads directory warning:', e.message);
 }
 
 // Middleware
@@ -44,6 +49,14 @@ const upload = multer({ dest: UPLOADS_DIR });
 // Store Helper Functions
 function readStore() {
   try {
+    // If running on Vercel and /tmp/store.json does not exist yet, copy initial data/store.json
+    if (IS_VERCEL && !fs.existsSync(STORE_PATH)) {
+      const initialStorePath = path.join(__dirname, 'data', 'store.json');
+      if (fs.existsSync(initialStorePath)) {
+        const initialData = fs.readFileSync(initialStorePath, 'utf8');
+        try { fs.writeFileSync(STORE_PATH, initialData, 'utf8'); } catch (e) {}
+      }
+    }
     const raw = fs.readFileSync(STORE_PATH, 'utf8');
     return JSON.parse(raw);
   } catch (err) {
@@ -1113,11 +1126,16 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-// Start Server
-server.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(`  SECURE QUIZ LOCKDOWN SERVER READY ON PORT ${PORT}`);
-  console.log(`  Student Login: http://localhost:${PORT}`);
-  console.log(`  Admin Portal:  http://localhost:${PORT}/admin`);
-  console.log(`=======================================================`);
-});
+// Export express app for Vercel Serverless Functions
+module.exports = app;
+
+// Start Server (only when running directly / non-Vercel environment)
+if (!process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`  SECURE QUIZ LOCKDOWN SERVER READY ON PORT ${PORT}`);
+    console.log(`  Student Login: http://localhost:${PORT}`);
+    console.log(`  Admin Portal:  http://localhost:${PORT}/admin`);
+    console.log(`=======================================================`);
+  });
+}

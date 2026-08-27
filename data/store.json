@@ -4,7 +4,32 @@
     "password": "SCRS@2026"
   },
   "quizzes": [],
-  "students": [],
+  "students": [
+    {
+      "id": "stu-1787853014125-122",
+      "name": "Ganesh",
+      "rollNumber": "99230040791@klu.ac.in",
+      "username": "ganesh",
+      "password": "FNgZZb9v",
+      "createdAt": "2026-08-27T17:50:14.125Z"
+    },
+    {
+      "id": "stu-1787853014126-786",
+      "name": "dhanush",
+      "rollNumber": "99230040792@klu.ac.in",
+      "username": "dhanush",
+      "password": "hdN8SCnh",
+      "createdAt": "2026-08-27T17:50:14.126Z"
+    },
+    {
+      "id": "stu-1787853014126-533",
+      "name": "rahul",
+      "rollNumber": "99230040546@klu.ac.in",
+      "username": "rahul",
+      "password": "B67D2UZm",
+      "createdAt": "2026-08-27T17:50:14.126Z"
+    }
+  ],
   "sessions": {},
   "results": []
 }

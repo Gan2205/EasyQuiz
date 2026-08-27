@@ -66,19 +66,22 @@ try {
 }
 
 // Store Helper Functions
-function readStore() {
-  try {
-    let raw = null;
-    if (IS_VERCEL && fs.existsSync(STORE_PATH)) {
-      raw = fs.readFileSync(STORE_PATH, 'utf8');
-    } else if (!IS_VERCEL && fs.existsSync(STORE_PATH)) {
-      raw = fs.readFileSync(STORE_PATH, 'utf8');
-    }
+let globalMemoryStore = null;
 
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && parsed.admin && Array.isArray(parsed.students)) {
-        return parsed;
+function readStore() {
+  if (globalMemoryStore && Array.isArray(globalMemoryStore.students) && globalMemoryStore.students.length > 0) {
+    return globalMemoryStore;
+  }
+
+  try {
+    if (fs.existsSync(STORE_PATH)) {
+      const raw = fs.readFileSync(STORE_PATH, 'utf8');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.admin && Array.isArray(parsed.students)) {
+          globalMemoryStore = parsed;
+          return parsed;
+        }
       }
     }
   } catch (err) {
@@ -90,11 +93,21 @@ function readStore() {
     try { fs.writeFileSync(STORE_PATH, JSON.stringify(initialBundledStore, null, 2), 'utf8'); } catch (e) {}
   }
 
-  return initialBundledStore;
+  globalMemoryStore = initialBundledStore || {
+    admin: { username: "SCRS", password: "SCRS@2026" },
+    quizzes: [],
+    students: [],
+    sessions: {},
+    results: []
+  };
+
+  return globalMemoryStore;
 }
 
 function writeStore(data) {
   try {
+    globalMemoryStore = data;
+    initialBundledStore = data;
     fs.writeFileSync(STORE_PATH, JSON.stringify(data, null, 2), 'utf8');
     // Asynchronously sync updates to Firebase Firestore
     FirebaseService.syncToFirebase(data);

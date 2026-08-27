@@ -11,9 +11,16 @@ const mammoth = require('mammoth');
 const XLSX = require('xlsx');
 const FirebaseService = require('./services/firebaseService');
 
+const IS_VERCEL = !!(process.env.VERCEL || process.env.NOW_BUILDER);
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+
+let wss = null;
+if (!IS_VERCEL) {
+  try {
+    wss = new WebSocket.Server({ server });
+  } catch (e) {}
+}
 
 // Auto-suppress Windows Game Bar on Windows OS server startup
 if (process.platform === 'win32') {
@@ -24,7 +31,6 @@ if (process.platform === 'win32') {
 }
 
 const PORT = process.env.PORT || 3000;
-const IS_VERCEL = !!(process.env.VERCEL || process.env.NOW_BUILDER);
 const STORE_PATH = IS_VERCEL ? path.join('/tmp', 'store.json') : path.join(__dirname, 'data', 'store.json');
 const UPLOADS_DIR = IS_VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'uploads');
 
@@ -88,28 +94,30 @@ function generatePassword(length = 8) {
 // WebSocket Active Connections Map (studentId/username -> WebSocket instance)
 const connectedClients = new Map();
 
-wss.on('connection', (ws, req) => {
-  let clientUsername = null;
+if (wss) {
+  wss.on('connection', (ws, req) => {
+    let clientUsername = null;
 
-  ws.on('message', (message) => {
-    try {
-      const payload = JSON.parse(message);
-      if (payload.type === 'REGISTER_STUDENT') {
-        clientUsername = payload.username;
-        connectedClients.set(clientUsername, ws);
-        ws.send(JSON.stringify({ type: 'REGISTERED', username: clientUsername }));
+    ws.on('message', (message) => {
+      try {
+        const payload = JSON.parse(message);
+        if (payload.type === 'REGISTER_STUDENT') {
+          clientUsername = payload.username;
+          connectedClients.set(clientUsername, ws);
+          ws.send(JSON.stringify({ type: 'REGISTERED', username: clientUsername }));
+        }
+      } catch (e) {
+        console.error('WS error:', e);
       }
-    } catch (e) {
-      console.error('WS error:', e);
-    }
-  });
+    });
 
-  ws.on('close', () => {
-    if (clientUsername) {
-      connectedClients.delete(clientUsername);
-    }
+    ws.on('close', () => {
+      if (clientUsername) {
+        connectedClients.delete(clientUsername);
+      }
+    });
   });
-});
+}
 
 function broadcastToStudent(username, data) {
   const targetUser = (username || '').toLowerCase();

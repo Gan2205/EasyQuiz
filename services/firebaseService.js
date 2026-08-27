@@ -7,7 +7,8 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const STORE_PATH = path.join(__dirname, '..', 'data', 'store.json');
+const IS_VERCEL = !!(process.env.VERCEL || process.env.NOW_BUILDER);
+const STORE_PATH = IS_VERCEL ? path.join('/tmp', 'store.json') : path.join(__dirname, '..', 'data', 'store.json');
 const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || 'studio-8450670559-9edfe';
 
 // Firestore REST API Endpoint Base

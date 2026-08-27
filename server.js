@@ -635,78 +635,67 @@ function extractTextFromDocxBuffer(buffer) {
   return rawStr.replace(/[^\x20-\x7E\r\n]/g, ' ');
 }
 
-// DOCX & Text Question & Options Layout Parser (Supports Alphabetic & Numerical Options)
+// Helper to extract clean option texts from a line
+function extractOptionsFromLine(line) {
+  return line
+    .split(/(?:^|\s+)(?:[a-dA-D1-4][\.\)]|\([a-dA-D1-4]\)|Option\s*[a-dA-D1-4]:?)\s*/i)
+    .map(p => p.trim())
+    .filter(p => p.length > 0);
+}
+
+// DOCX & Text Question & Options Layout Parser (Handles Typos & Multi-Option Lines)
 function parseQuestionsFromText(text, optionFormat = 'auto') {
   if (!text) return [];
 
-  // Pre-process text to separate inline multi-options (e.g. "a. gangster b. goon" or "1. gangster 2. goon")
-  let processedText = (text || '')
-    .replace(/(\d+)[\.\)]\s*([a-zA-Z0-9])/g, '$1. $2')
-    .replace(/([^\n])\s+([a-dA-D][\.\)]|\([a-dA-D]\))\s*/g, '$1\n$2 ')
-    .replace(/([^\n])\s+([2-4][\.\)]|\([2-4]\))\s+/g, '$1\n$2 ');
-
-  const rawLines = processedText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  const rawLines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
   const questions = [];
   let currentQ = null;
 
   rawLines.forEach(line => {
-    // Ignore document title lines or ZIP headers
     if (line.toLowerCase() === 'sample quiz' || line.startsWith('PK') || line.includes('[Content_Types]')) return;
 
-    const isAlphaOption = line.match(/^(?:[A-Da-d][\.\)]|\([A-Da-d]\)|Option\s*[A-Da-d1-4]:?)\s*(.*)/i);
-    const isNumOption = line.match(/^(?:[1-4][\.\)]|\([1-4]\))\s*(.*)/i);
+    // Strict Question Header Detection (e.g. "1.what...", "2.who...", "3.who...", "4.who...", "Q1:...")
     const isQuestionHeader = line.match(/^(?:Q(?:uestion)?\s*\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
+    const isOptionLine = line.match(/^(?:[A-Da-d1-4][\.\)]|\([A-Da-d1-4]\)|Option\s*[A-Da-d1-4]:?)\s*/i);
 
-    if (optionFormat === 'numeric') {
-      if (isNumOption && currentQ && currentQ.options.length < 4) {
-        currentQ.options.push(isNumOption[1].trim() || line);
-        return;
-      }
-    } else if (optionFormat === 'alphabetic') {
-      if (isAlphaOption && currentQ && currentQ.options.length < 4) {
-        currentQ.options.push(isAlphaOption[1].trim() || line);
-        return;
-      }
-    } else {
-      // Auto-Detect Mode
-      if (isAlphaOption && currentQ && currentQ.options.length < 4) {
-        currentQ.options.push(isAlphaOption[1].trim() || line);
-        return;
-      }
-      if (isNumOption && currentQ) {
-        const expectedNum = currentQ.options.length + 1;
-        const numMatch = line.match(/^([1-4])[\.\)]/);
-        if (numMatch && parseInt(numMatch[1], 10) === expectedNum) {
-          currentQ.options.push(isNumOption[1].trim() || line);
-          return;
-        }
-      }
-    }
-
-    if (isQuestionHeader) {
+    if (isQuestionHeader && (!currentQ || currentQ.options.length >= 2 || isQuestionHeader[0].match(/^\d+[\.\)]/))) {
       if (currentQ && currentQ.text) {
         while (currentQ.options.length < 4) currentQ.options.push('N/A');
         questions.push(currentQ);
       }
+
       currentQ = {
         id: 'q-' + Date.now() + '-' + questions.length,
         text: isQuestionHeader[1].trim() || line,
         options: [],
         correctAnswer: 0
       };
-    } else if (currentQ) {
+      return;
+    }
+
+    if (isOptionLine && currentQ) {
+      const extractedOpts = extractOptionsFromLine(line);
+      extractedOpts.forEach(opt => {
+        if (currentQ.options.length < 4) {
+          currentQ.options.push(opt);
+        }
+      });
+      return;
+    }
+
+    if (currentQ) {
       if (currentQ.options.length < 4) {
-        currentQ.options.push(line);
+        const extractedOpts = extractOptionsFromLine(line);
+        if (extractedOpts.length > 0) {
+          extractedOpts.forEach(opt => {
+            if (currentQ.options.length < 4) currentQ.options.push(opt);
+          });
+        } else {
+          currentQ.text += ' ' + line;
+        }
       } else {
         currentQ.text += ' ' + line;
       }
-    } else {
-      currentQ = {
-        id: 'q-' + Date.now() + '-' + questions.length,
-        text: line,
-        options: [],
-        correctAnswer: 0
-      };
     }
   });
 

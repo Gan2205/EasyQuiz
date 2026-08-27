@@ -543,29 +543,47 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => 
     const newCredentials = [];
 
     rawRows.forEach(item => {
-      const sanitizedName = item.name.toLowerCase().replace(/[^a-z0-9]/g, '.').replace(/\.+/g, '.');
-      let baseUsername = sanitizedName;
-      if (baseUsername.length < 3) baseUsername = `candidate.${item.rollNumber.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+      const cleanRoll = (item.rollNumber || '').trim().toLowerCase();
+      const cleanReg = cleanRoll.split('@')[0];
 
-      let finalUsername = baseUsername;
-      let count = 1;
-      while (store.students.some(s => s.username === finalUsername)) {
-        finalUsername = `${baseUsername}.${count}`;
-        count++;
+      // Check if candidate already exists in store by Register Number or Roll Number
+      const existingStudent = (store.students || []).find(s => {
+        const sRoll = (s.rollNumber || '').trim().toLowerCase();
+        const sReg = sRoll.split('@')[0];
+        return sRoll === cleanRoll || (cleanReg && sReg === cleanReg);
+      });
+
+      if (existingStudent) {
+        // Update existing candidate details without creating duplicates or changing username
+        existingStudent.name = item.name;
+        existingStudent.rollNumber = item.rollNumber;
+        newCredentials.push(existingStudent);
+      } else {
+        // Create new unique candidate
+        const sanitizedName = item.name.toLowerCase().replace(/[^a-z0-9]/g, '.').replace(/\.+/g, '.');
+        let baseUsername = sanitizedName;
+        if (baseUsername.length < 3) baseUsername = `candidate.${cleanReg.replace(/[^a-z0-9]/g, '')}`;
+
+        let finalUsername = baseUsername;
+        let count = 1;
+        while ((store.students || []).some(s => s.username === finalUsername)) {
+          finalUsername = `${baseUsername}.${count}`;
+          count++;
+        }
+
+        const generatedPassword = generatePassword(8);
+        const studentObj = {
+          id: 'stu-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          name: item.name,
+          rollNumber: item.rollNumber,
+          username: finalUsername,
+          password: generatedPassword,
+          createdAt: new Date().toISOString()
+        };
+
+        store.students.push(studentObj);
+        newCredentials.push(studentObj);
       }
-
-      const generatedPassword = generatePassword(8);
-      const studentObj = {
-        id: 'stu-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-        name: item.name,
-        rollNumber: item.rollNumber,
-        username: finalUsername,
-        password: generatedPassword,
-        createdAt: new Date().toISOString()
-      };
-
-      store.students.push(studentObj);
-      newCredentials.push(studentObj);
     });
 
     writeStore(store);
@@ -581,6 +599,37 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => 
     console.error('Roster Parse Error:', err);
     res.status(500).json({ success: false, message: `Failed to parse ${fileName} roster file.` });
   }
+});
+
+// Admin Clean Up Duplicate Candidate Credentials
+app.post(['/api/admin/deduplicate-candidates', '/admin/deduplicate-candidates'], (req, res) => {
+  const store = readStore();
+  const uniqueStudents = [];
+  const seenRolls = new Set();
+  let removedCount = 0;
+
+  (store.students || []).forEach(s => {
+    const cleanRoll = (s.rollNumber || '').trim().toLowerCase();
+    const cleanReg = cleanRoll.split('@')[0];
+    const key = cleanReg || cleanRoll || s.username;
+
+    if (!seenRolls.has(key)) {
+      seenRolls.add(key);
+      uniqueStudents.push(s);
+    } else {
+      removedCount++;
+    }
+  });
+
+  store.students = uniqueStudents;
+  writeStore(store);
+
+  res.json({
+    success: true,
+    message: `Successfully deduplicated roster! Removed ${removedCount} duplicate entries.`,
+    count: uniqueStudents.length,
+    students: uniqueStudents
+  });
 });
 
 // 9. Admin Get Student Credentials JSON List

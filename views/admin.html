@@ -157,9 +157,14 @@
             Upload an institutional Excel/CSV roster (Columns: Name, Roll Number/Email). Credentials will be auto-generated.
           </p>
         </div>
-        <a href="/api/admin/download-credentials" class="btn btn-primary btn-sm" download>
-          Download Credentials CSV
-        </a>
+        <div style="display: flex; gap: 0.5rem;">
+          <button onclick="deduplicateCandidatesRemote()" class="btn btn-secondary btn-sm" style="border-color: rgba(245, 158, 11, 0.4); color: var(--status-warning);">
+            🧹 Clean Duplicate Candidates
+          </button>
+          <a href="/api/admin/download-credentials" class="btn btn-primary btn-sm" download>
+            Download Credentials CSV
+          </a>
+        </div>
       </div>
 
       <!-- File Upload Zone -->
@@ -690,6 +695,23 @@
         }
       } catch (e) {
         alert('Error triggering Firebase sync.');
+      }
+    }
+
+    async function deduplicateCandidatesRemote() {
+      if (!confirm('Remove duplicate candidate credentials from directory?')) return;
+      try {
+        const res = await fetch('/api/admin/deduplicate-candidates', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message || 'Candidates deduplicated successfully.');
+          fetchCredentials();
+          fetchAttendanceData();
+        } else {
+          alert(data.message || 'Failed to deduplicate candidates.');
+        }
+      } catch (err) {
+        alert('Server error while deduplicating candidates.');
       }
     }
 

@@ -10,6 +10,7 @@ const XLSX = require('xlsx');
 const AdmZip = require('adm-zip');
 const pdfParseModule = require('pdf-parse');
 const FirebaseService = require('./services/firebaseService');
+const NeonService = require('./services/neonService');
 
 const IS_VERCEL = !!(process.env.VERCEL || process.env.NOW_BUILDER);
 const app = express();

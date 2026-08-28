@@ -816,20 +816,13 @@ function extractTextFromDocxBuffer(buffer) {
   return rawStr.replace(/[^\x20-\x7E\r\n]/g, ' ');
 }
 
-// PDF Text Stream Cleaner (Uses pdf-parse engine for 100% clean PDF text extraction)
+// PDF Text Stream Cleaner (Uses pdf-parse 1.1.1 pure JS engine for 100% clean PDF text extraction on Vercel)
 async function extractTextFromPdfBuffer(buffer) {
   try {
-    if (pdfParseModule && pdfParseModule.PDFParse) {
-      const parser = new pdfParseModule.PDFParse({ data: buffer });
-      const res = await parser.getText();
-      const text = typeof res === 'string' ? res : (res ? (res.text || String(res)) : '');
-      if (text && text.trim().length > 10) {
-        return text;
-      }
-    }
-    if (typeof pdfParseModule === 'function') {
-      const res = await pdfParseModule(buffer);
-      const text = typeof res === 'string' ? res : (res ? (res.text || String(res)) : '');
+    const parseFn = typeof pdfParseModule === 'function' ? pdfParseModule : (pdfParseModule.default || pdfParseModule);
+    if (typeof parseFn === 'function') {
+      const res = await parseFn(buffer);
+      const text = res ? (res.text || String(res)) : '';
       if (text && text.trim().length > 10) {
         return text;
       }

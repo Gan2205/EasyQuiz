@@ -167,12 +167,13 @@ function broadcastToStudent(username, data) {
 
 // Auto-Restore Data from Firebase Firestore on Cold Lambda Container Start
 async function ensureStoreLoaded() {
-  if (globalMemoryStore && globalMemoryStore.quizzes && globalMemoryStore.quizzes.length > 0) {
+  if (globalMemoryStore && Array.isArray(globalMemoryStore.students) && globalMemoryStore.students.length > 0) {
     return globalMemoryStore;
   }
 
   const store = readStore();
-  if (store && store.quizzes && store.quizzes.length > 0) {
+  if (store && Array.isArray(store.students) && store.students.length > 0) {
+    globalMemoryStore = store;
     return store;
   }
 
@@ -194,7 +195,7 @@ async function ensureStoreLoaded() {
 // Global Middleware: Auto-sync from Firebase on serverless cold-start
 app.use(async (req, res, next) => {
   if (req.path.startsWith('/api/') || req.path === '/quizzes' || req.path === '/exam') {
-    if (!globalMemoryStore || !globalMemoryStore.quizzes || globalMemoryStore.quizzes.length === 0) {
+    if (!globalMemoryStore || !Array.isArray(globalMemoryStore.students) || globalMemoryStore.students.length === 0) {
       await ensureStoreLoaded();
     }
   }
@@ -204,9 +205,9 @@ app.use(async (req, res, next) => {
 // --- REST API ENDPOINTS ---
 
 // 1. Student Auth (Flexible login by Username, Register Number, or Email)
-app.post(['/api/auth/student-login', '/auth/student-login', '/api/student-login'], (req, res) => {
+app.post(['/api/auth/student-login', '/auth/student-login', '/api/student-login'], async (req, res) => {
   const { username, password } = req.body;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
   const inputUser = (username || '').trim().toLowerCase();
   const inputPass = (password || '').trim();
 
@@ -214,8 +215,9 @@ app.post(['/api/auth/student-login', '/auth/student-login', '/api/student-login'
     const matchUser = (s.username || '').toLowerCase() === inputUser;
     const matchRoll = (s.rollNumber || '').toLowerCase() === inputUser;
     const matchReg = (s.rollNumber || '').split('@')[0].toLowerCase() === inputUser;
+    const matchName = (s.name || '').toLowerCase() === inputUser;
     const matchPass = (s.password || '').trim() === inputPass;
-    return (matchUser || matchRoll || matchReg) && matchPass;
+    return (matchUser || matchRoll || matchReg || matchName) && matchPass;
   });
 
   if (!student) {

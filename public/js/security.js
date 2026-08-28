@@ -487,7 +487,6 @@ window.SecurityEngine = (function() {
     },
 
     reEnterFullscreen: async function() {
-      tabSwitchCount = 0;
       isEnteringFullscreen = true;
       isProctorActive = false;
       hideWarningModal();
@@ -502,8 +501,7 @@ window.SecurityEngine = (function() {
       } catch (e) {
         console.warn('Re-enter fullscreen error:', e);
       }
-      await new Promise(r => setTimeout(r, 1200));
-      tabSwitchCount = 0;
+      await new Promise(r => setTimeout(r, 800));
       isEnteringFullscreen = false;
       isProctorActive = true;
     },

@@ -3,8 +3,37 @@
     "username": "SCRS",
     "password": "SCRS@2026"
   },
-  "quizzes": [],
-  "students": [],
+  "quizzes": [
+    {
+      "id": "quiz-neon-test",
+      "title": "Neon PostgreSQL Assessment",
+      "description": "Testing Neon Serverless DB integration",
+      "timeLimitMinutes": 15,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "What database engine is EasyQuiz using?",
+          "options": [
+            "Firebase",
+            "Neon PostgreSQL",
+            "MongoDB",
+            "SQLite"
+          ],
+          "correctAnswer": 1
+        }
+      ]
+    }
+  ],
+  "students": [
+    {
+      "id": "stu-neon-rahul",
+      "name": "rahul",
+      "rollNumber": "99230040546@klu.ac.in",
+      "username": "rahul",
+      "password": "z42FL9sk",
+      "createdAt": "2026-08-28T09:22:11.300Z"
+    }
+  ],
   "sessions": {},
   "results": []
 }

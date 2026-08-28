@@ -94,14 +94,29 @@ function readStore() {
     try { fs.writeFileSync(STORE_PATH, JSON.stringify(initialBundledStore, null, 2), 'utf8'); } catch (e) {}
   }
 
-  globalMemoryStore = initialBundledStore || {
-    admin: { username: "SCRS", password: "SCRS@2026" },
+      const content = fs.readFileSync(STORE_PATH, 'utf8');
+      globalMemoryStore = JSON.parse(content);
+      return globalMemoryStore;
+    }
+  } catch (err) {
+    console.error('Error reading store from disk:', err);
+  }
+
+  if (initialBundledStore) {
+    globalMemoryStore = JSON.parse(JSON.stringify(initialBundledStore));
+    return globalMemoryStore;
+  }
+
+  globalMemoryStore = {
+    admin: {
+      username: 'SCRS',
+      password: 'SCRS@2026'
+    },
     quizzes: [],
     students: [],
     sessions: {},
     results: []
   };
-
   return globalMemoryStore;
 }
 
@@ -110,9 +125,9 @@ function writeStore(data) {
     globalMemoryStore = data;
     initialBundledStore = data;
     fs.writeFileSync(STORE_PATH, JSON.stringify(data, null, 2), 'utf8');
-    // Non-blocking asynchronous background sync to Firebase Firestore
+    // Non-blocking asynchronous background sync to Neon PostgreSQL Serverless Database
     setImmediate(() => {
-      FirebaseService.syncToFirebase(data).catch(e => {});
+      NeonService.syncToNeon(data).catch(e => {});
     });
   } catch (err) {
     console.error('Error writing store:', err);
@@ -166,15 +181,15 @@ function broadcastToStudent(username, data) {
   }
 }
 
-// Auto-Restore Data from Firebase Firestore on Cold Lambda Container Start
+// Auto-Restore Data from Neon Serverless PostgreSQL on Cold Lambda Container Start
 async function ensureStoreLoaded() {
   if (!globalMemoryStore) {
     globalMemoryStore = readStore();
   }
 
-  // Auto-pull live data directly from Firebase Firestore
+  // Auto-pull live data directly from Neon PostgreSQL
   try {
-    const pullResult = await FirebaseService.pullFromFirebase();
+    const pullResult = await NeonService.pullFromNeon();
     if (pullResult && pullResult.success && pullResult.data) {
       if (Array.isArray(pullResult.data.quizzes) && pullResult.data.quizzes.length > 0) {
         globalMemoryStore.quizzes = pullResult.data.quizzes;
@@ -193,6 +208,9 @@ async function ensureStoreLoaded() {
           }
         });
       }
+      if (pullResult.data.sessions && typeof pullResult.data.sessions === 'object') {
+        globalMemoryStore.sessions = { ...globalMemoryStore.sessions, ...pullResult.data.sessions };
+      }
       if (Array.isArray(pullResult.data.results) && pullResult.data.results.length > 0) {
         if (!Array.isArray(globalMemoryStore.results)) globalMemoryStore.results = [];
         pullResult.data.results.forEach(r => {
@@ -203,13 +221,13 @@ async function ensureStoreLoaded() {
       }
     }
   } catch (e) {
-    console.warn('Firebase auto-pull notice:', e.message);
+    console.warn('Neon DB auto-pull notice:', e.message);
   }
 
   return globalMemoryStore;
 }
 
-// Global Middleware: Auto-sync from Firebase on serverless cold-start
+// Global Middleware: Auto-sync from Neon PostgreSQL on serverless cold-start
 app.use(async (req, res, next) => {
   if (req.path.startsWith('/api/') || req.path === '/quizzes' || req.path === '/exam') {
     await ensureStoreLoaded();
@@ -217,9 +235,9 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Admin Firebase Status Endpoint
-app.get('/api/admin/firebase-status', (req, res) => {
-  res.json(FirebaseService.getStatus());
+// Admin Neon Database Status Endpoint
+app.get(['/api/admin/database-status', '/api/admin/firebase-status'], (req, res) => {
+  res.json(NeonService.getStatus());
 });
 
 // --- REST API ENDPOINTS ---

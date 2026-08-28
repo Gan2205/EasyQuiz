@@ -12,6 +12,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "adm-zip": "^0.5.18",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",

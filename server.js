@@ -113,17 +113,15 @@ function readStore() {
   return globalMemoryStore;
 }
 
-function writeStore(data) {
+async function writeStore(data) {
   try {
     globalMemoryStore = data;
     initialBundledStore = data;
-    fs.writeFileSync(STORE_PATH, JSON.stringify(data, null, 2), 'utf8');
-    // Non-blocking asynchronous background sync to Neon PostgreSQL Serverless Database
-    setImmediate(() => {
-      NeonService.syncToNeon(data).catch(e => {});
-    });
+    try { fs.writeFileSync(STORE_PATH, JSON.stringify(data, null, 2), 'utf8'); } catch (e) {}
+    // Synchronously await Neon PostgreSQL write so Vercel never freezes pending updates
+    await NeonService.syncToNeon(data);
   } catch (err) {
-    console.error('Error writing store:', err);
+    console.error('Error writing store to Neon:', err);
   }
 }
 
@@ -184,10 +182,36 @@ async function ensureStoreLoaded() {
   try {
     const pullResult = await NeonService.pullFromNeon();
     if (pullResult && pullResult.success && pullResult.data) {
-      globalMemoryStore.quizzes = pullResult.data.quizzes || [];
-      globalMemoryStore.students = pullResult.data.students || [];
-      globalMemoryStore.sessions = pullResult.data.sessions || {};
-      globalMemoryStore.results = pullResult.data.results || [];
+      // Merge quizzes safely
+      if (Array.isArray(pullResult.data.quizzes) && pullResult.data.quizzes.length > 0) {
+        globalMemoryStore.quizzes = pullResult.data.quizzes;
+      }
+      // Merge candidates safely
+      if (Array.isArray(pullResult.data.students) && pullResult.data.students.length > 0) {
+        if (!Array.isArray(globalMemoryStore.students)) globalMemoryStore.students = [];
+        pullResult.data.students.forEach(s => {
+          const idx = globalMemoryStore.students.findIndex(existingS => 
+            existingS.id === s.id || 
+            (existingS.username && s.username && existingS.username.toLowerCase() === s.username.toLowerCase())
+          );
+          if (idx !== -1) {
+            globalMemoryStore.students[idx] = s;
+          } else {
+            globalMemoryStore.students.push(s);
+          }
+        });
+      }
+      if (pullResult.data.sessions && typeof pullResult.data.sessions === 'object') {
+        globalMemoryStore.sessions = { ...globalMemoryStore.sessions, ...pullResult.data.sessions };
+      }
+      if (Array.isArray(pullResult.data.results) && pullResult.data.results.length > 0) {
+        if (!Array.isArray(globalMemoryStore.results)) globalMemoryStore.results = [];
+        pullResult.data.results.forEach(r => {
+          if (!globalMemoryStore.results.some(existingR => existingR.id === r.id)) {
+            globalMemoryStore.results.push(r);
+          }
+        });
+      }
     }
   } catch (e) {
     console.warn('Neon DB auto-pull notice:', e.message);
@@ -334,9 +358,9 @@ app.get('/api/admin/quizzes', (req, res) => {
 });
 
 // Admin Save/Create Quiz
-app.post('/api/admin/quizzes', (req, res) => {
+app.post('/api/admin/quizzes', async (req, res) => {
   const { id, title, description, timeLimitMinutes, questions } = req.body;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
 
   const timeLimit = parseInt(timeLimitMinutes, 10) || 15;
   const cleanTitle = (title || 'Assessment Module').trim();
@@ -363,19 +387,17 @@ app.post('/api/admin/quizzes', (req, res) => {
     });
   }
 
-  writeStore(store);
+  await writeStore(store);
   res.json({ success: true, count: store.quizzes.length, quizzes: store.quizzes });
 });
 
 // Admin Delete Quiz
-app.delete('/api/admin/quizzes/:id', (req, res) => {
+app.delete('/api/admin/quizzes/:id', async (req, res) => {
   const { id } = req.params;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
   store.quizzes = store.quizzes.filter(q => q.id !== id);
-  writeStore(store);
-  setImmediate(() => {
-    FirebaseService.deleteFromFirebase('quizzes', id).catch(e => {});
-  });
+  await writeStore(store);
+  await NeonService.deleteItem('quizzes', id);
   res.json({ success: true, count: store.quizzes.length, quizzes: store.quizzes });
 });
 
@@ -483,9 +505,9 @@ app.post(['/api/exam/start', '/exam/start'], async (req, res) => {
 });
 
 // 5. Exam Incident Logger & Lockout Trigger
-app.post(['/api/exam/incident', '/exam/incident'], (req, res) => {
+app.post(['/api/exam/incident', '/exam/incident'], async (req, res) => {
   const { username, quizId, violationType, details } = req.body;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
   const sessionKey = `${username}_${quizId}`;
   const session = store.sessions[sessionKey];
 
@@ -523,7 +545,7 @@ app.post(['/api/exam/incident', '/exam/incident'], (req, res) => {
     }
   }
 
-  writeStore(store);
+  await writeStore(store);
 
   // Notify student socket ONLY if blocked
   if (session.status === 'BLOCKED') {
@@ -534,9 +556,9 @@ app.post(['/api/exam/incident', '/exam/incident'], (req, res) => {
 });
 
 // 6. Student Exam Submit
-app.post(['/api/exam/submit', '/exam/submit'], (req, res) => {
+app.post(['/api/exam/submit', '/exam/submit'], async (req, res) => {
   const { username, quizId, answers, timeSpentSeconds } = req.body;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
   
   const cleanUser = (username || '').toLowerCase().trim();
   const cleanRoll = cleanUser.split('@')[0];
@@ -618,15 +640,15 @@ app.post(['/api/exam/submit', '/exam/submit'], (req, res) => {
     session.finalScore = percentage;
   }
 
-  writeStore(store);
+  await writeStore(store);
 
   res.json({ success: true, result: resultRecord });
 });
 
 // 7. Student Unblock via Master Admin Code (Local on screen)
-app.post('/api/exam/admin-code-unblock', (req, res) => {
+app.post('/api/exam/admin-code-unblock', async (req, res) => {
   const { username, quizId, masterCode } = req.body;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
 
   if (masterCode !== 'UNLOCK2026' && masterCode !== store.admin.password) {
     return res.status(401).json({ success: false, message: 'Invalid Admin Unlock Code.' });
@@ -639,7 +661,7 @@ app.post('/api/exam/admin-code-unblock', (req, res) => {
     session.status = 'IN_PROGRESS';
     session.tabSwitchCount = 0; // Reset tab count after unblock
     session.unblockedAt = new Date().toISOString();
-    writeStore(store);
+    await writeStore(store);
     broadcastToStudent(username, { type: 'EXAM_UNBLOCKED', session });
   }
 
@@ -703,7 +725,7 @@ app.get(['/api/exam/session-status', '/exam/session-status'], (req, res) => {
 });
 
 // 8. Admin Upload Excel / CSV Roster & Auto-Generate Credentials
-app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => {
+app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'No file uploaded.' });
   }
@@ -748,7 +770,7 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => 
       }
     });
 
-    const store = readStore();
+    const store = await ensureStoreLoaded();
     const newCredentials = [];
 
     rawRows.forEach(item => {
@@ -795,7 +817,7 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => 
       }
     });
 
-    writeStore(store);
+    await writeStore(store);
 
     res.json({
       success: true,
@@ -1269,35 +1291,32 @@ app.post(['/api/admin/unblock', '/admin/unblock', '/api/admin/unblock-student', 
 });
 
 // Admin Delete Student Credential
-app.delete('/api/admin/credentials/:id', (req, res) => {
+app.delete('/api/admin/credentials/:id', async (req, res) => {
   const { id } = req.params;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
   store.students = store.students.filter(s => s.id !== id);
-  writeStore(store);
-  setImmediate(() => {
-    FirebaseService.deleteFromFirebase('students', id).catch(e => {});
-  });
+  await writeStore(store);
+  await NeonService.deleteItem('students', id);
   res.json({ success: true, message: 'Candidate deleted.' });
 });
 
 // Admin Delete Live Session
-app.delete('/api/admin/sessions/:sessionKey', (req, res) => {
+app.delete('/api/admin/sessions/:sessionKey', async (req, res) => {
   const { sessionKey } = req.params;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
   delete store.sessions[sessionKey];
-  writeStore(store);
+  await writeStore(store);
+  await NeonService.deleteItem('sessions', sessionKey);
   res.json({ success: true, message: 'Session deleted.' });
 });
 
 // Admin Delete Exam Result
-app.delete('/api/admin/results/:id', (req, res) => {
+app.delete('/api/admin/results/:id', async (req, res) => {
   const { id } = req.params;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
   store.results = store.results.filter(r => r.id !== id);
-  writeStore(store);
-  setImmediate(() => {
-    FirebaseService.deleteFromFirebase('results', id).catch(e => {});
-  });
+  await writeStore(store);
+  await NeonService.deleteItem('results', id);
   res.json({ success: true, message: 'Result record deleted.' });
 });
 

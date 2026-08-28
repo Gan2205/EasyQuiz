@@ -731,14 +731,14 @@
           body: JSON.stringify({ resetType })
         });
         const data = await res.json();
-        if (data.success) {
-          alert(data.message);
-          loadAdminDashboard();
+        if (data && data.success) {
+          alert(data.message || 'Database reset successfully completed!');
+          await loadAdminDashboard();
         } else {
-          alert('Failed to reset test data.');
+          alert(data.message || 'Failed to reset test data.');
         }
       } catch (e) {
-        alert('Error communicating with server during reset.');
+        alert('Error communicating with server during reset: ' + e.message);
       }
     }
 

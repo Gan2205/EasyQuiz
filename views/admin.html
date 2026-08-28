@@ -766,7 +766,13 @@
           statusDiv.style.background = 'rgba(16, 185, 129, 0.15)';
           statusDiv.style.color = '#34d399';
           statusDiv.textContent = `Processed ${data.count} candidate credentials successfully!`;
-          fetchCredentials();
+          if (data.students && Array.isArray(data.students) && data.students.length > 0) {
+            renderCredentialsTable(data.students);
+          } else if (data.credentials && Array.isArray(data.credentials) && data.credentials.length > 0) {
+            renderCredentialsTable(data.credentials);
+          } else {
+            fetchCredentials();
+          }
         } else {
           statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
           statusDiv.style.color = 'var(--status-danger)';

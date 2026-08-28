@@ -733,7 +733,8 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), (req, res) => 
     res.json({
       success: true,
       count: newCredentials.length,
-      credentials: newCredentials
+      credentials: newCredentials,
+      students: store.students
     });
 
   } catch (err) {

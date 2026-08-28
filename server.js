@@ -192,6 +192,14 @@ async function ensureStoreLoaded() {
           }
         });
       }
+      if (Array.isArray(pullResult.data.results) && pullResult.data.results.length > 0) {
+        if (!globalMemoryStore.results) globalMemoryStore.results = [];
+        pullResult.data.results.forEach(r => {
+          if (!globalMemoryStore.results.some(existingR => existingR.id === r.id)) {
+            globalMemoryStore.results.push(r);
+          }
+        });
+      }
       try { fs.writeFileSync(STORE_PATH, JSON.stringify(globalMemoryStore, null, 2), 'utf8'); } catch (e) {}
       return globalMemoryStore;
     }
@@ -500,9 +508,36 @@ app.post(['/api/exam/incident', '/exam/incident'], (req, res) => {
 app.post(['/api/exam/submit', '/exam/submit'], (req, res) => {
   const { username, quizId, answers, timeSpentSeconds } = req.body;
   const store = readStore();
-  const sessionKey = `${username}_${quizId}`;
-  const session = store.sessions[sessionKey];
-  const quiz = store.quizzes.find(q => q.id === quizId);
+  
+  const cleanUser = (username || '').toLowerCase().trim();
+  const cleanRoll = cleanUser.split('@')[0];
+
+  let session = store.sessions[`${username}_${quizId}`];
+  if (!session) {
+    for (const [sKey, sess] of Object.entries(store.sessions || {})) {
+      const sUser = (sess.username || '').toLowerCase();
+      const sRoll = (sess.rollNumber || '').toLowerCase().split('@')[0];
+      if ((sUser === cleanUser || sRoll === cleanRoll) && (!quizId || sess.quizId === quizId)) {
+        session = sess;
+        break;
+      }
+    }
+  }
+
+  // Find canonical student record from store
+  const student = (store.students || []).find(s => {
+    const sUser = (s.username || '').toLowerCase();
+    const sRoll = (s.rollNumber || '').toLowerCase();
+    const sReg = sRoll.split('@')[0];
+    const sName = (s.name || '').toLowerCase();
+    return sUser === cleanUser || sRoll === cleanUser || sReg === cleanRoll || sName === cleanUser;
+  });
+
+  const canonicalUsername = student ? student.username : (session ? session.username : username);
+  const canonicalName = student ? student.name : (session ? session.studentName : username);
+  const canonicalRoll = student ? student.rollNumber : (session ? session.rollNumber : 'N/A');
+
+  const quiz = store.quizzes.find(q => q.id === quizId) || store.quizzes[0];
 
   if (!quiz) {
     return res.status(400).json({ success: false, message: 'Quiz not found.' });
@@ -531,18 +566,18 @@ app.post(['/api/exam/submit', '/exam/submit'], (req, res) => {
 
   const resultRecord = {
     id: 'res-' + Date.now(),
-    sessionKey,
-    username,
-    studentName: session ? session.studentName : username,
-    rollNumber: session ? session.rollNumber : 'N/A',
-    quizId,
+    sessionKey: session ? session.sessionKey : `${canonicalUsername}_${quiz.id}`,
+    username: canonicalUsername,
+    studentName: canonicalName,
+    rollNumber: canonicalRoll,
+    quizId: quiz.id,
     quizTitle: quiz.title,
     score,
     totalQuestions,
     percentage,
     timeSpentSeconds: timeSpentSeconds || 0,
     tabSwitchCount: session ? session.tabSwitchCount : 0,
-    violationsCount: session ? session.violations.length : 0,
+    violationsCount: session ? (session.violations ? session.violations.length : 0) : 0,
     violations: session ? session.violations : [],
     status: (session && session.status === 'BLOCKED') ? 'DISQUALIFIED' : 'PASSED',
     submittedAt: new Date().toISOString()
@@ -1140,12 +1175,30 @@ app.get(['/api/admin/candidate-attendance', '/admin/candidate-attendance'], (req
   let notStartedCount = 0;
 
   const attendanceList = students.map(s => {
-    const username = (s.username || '').toLowerCase();
-    const resultRecord = results.find(r => (r.username || '').toLowerCase() === username);
+    const cleanUser = (s.username || '').toLowerCase();
+    const cleanRoll = (s.rollNumber || '').toLowerCase();
+    const cleanReg = cleanRoll.split('@')[0];
+    const cleanName = (s.name || '').toLowerCase();
+
+    const resultRecord = results.find(r => {
+      if (!r) return false;
+      const rUser = (r.username || '').toLowerCase();
+      const rRoll = (r.rollNumber || '').toLowerCase();
+      const rReg = rRoll.split('@')[0];
+      const rName = (r.studentName || '').toLowerCase();
+      return rUser === cleanUser || rUser === cleanReg || rRoll === cleanRoll || rReg === cleanReg || (cleanName && rName === cleanName);
+    });
 
     let activeSession = null;
     Object.values(sessions).forEach(sess => {
-      if ((sess.username || '').toLowerCase() === username) activeSession = sess;
+      if (!sess) return;
+      const sUser = (sess.username || '').toLowerCase();
+      const sRoll = (sess.rollNumber || '').toLowerCase();
+      const sReg = sRoll.split('@')[0];
+      const sName = (sess.studentName || '').toLowerCase();
+      if (sUser === cleanUser || sUser === cleanReg || sRoll === cleanRoll || sReg === cleanReg || (cleanName && sName === cleanName)) {
+        activeSession = sess;
+      }
     });
 
     let status = 'NOT_STARTED';
@@ -1266,15 +1319,30 @@ app.get(['/api/admin/results', '/admin/results'], (req, res) => {
   const sessions = store.sessions || {};
 
   const scoresList = students.map((stu, idx) => {
-    const username = (stu.username || '').toLowerCase();
+    const cleanUser = (stu.username || '').toLowerCase();
+    const cleanRoll = (stu.rollNumber || '').toLowerCase();
+    const cleanReg = cleanRoll.split('@')[0];
+    const cleanName = (stu.name || '').toLowerCase();
 
-    // 1. Check if candidate completed exam
-    const resultRecord = results.find(r => (r.username || '').toLowerCase() === username);
+    // 1. Check if candidate completed exam (flexible multi-field lookup)
+    const resultRecord = results.find(r => {
+      if (!r) return false;
+      const rUser = (r.username || '').toLowerCase();
+      const rRoll = (r.rollNumber || '').toLowerCase();
+      const rReg = rRoll.split('@')[0];
+      const rName = (r.studentName || '').toLowerCase();
+      return rUser === cleanUser || rUser === cleanReg || rRoll === cleanRoll || rReg === cleanReg || (cleanName && rName === cleanName);
+    });
 
     // 2. Check if candidate has active/ongoing session
     let activeSession = null;
     Object.values(sessions).forEach(sess => {
-      if ((sess.username || '').toLowerCase() === username) {
+      if (!sess) return;
+      const sUser = (sess.username || '').toLowerCase();
+      const sRoll = (sess.rollNumber || '').toLowerCase();
+      const sReg = sRoll.split('@')[0];
+      const sName = (sess.studentName || '').toLowerCase();
+      if (sUser === cleanUser || sUser === cleanReg || sRoll === cleanRoll || sReg === cleanReg || (cleanName && sName === cleanName)) {
         activeSession = sess;
       }
     });

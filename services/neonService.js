@@ -27,79 +27,95 @@ const NeonService = {
 
   // Read entire store baseline from Neon PostgreSQL
   pullFromNeon: async () => {
-    try {
-      const storeData = {
-        admin: { username: 'SCRS', password: 'SCRS@2026' },
-        quizzes: [],
-        students: [],
-        sessions: {},
-        results: []
-      };
+    const storeData = {
+      admin: { username: 'SCRS', password: 'SCRS@2026' },
+      quizzes: [],
+      students: [],
+      sessions: {},
+      results: []
+    };
 
+    try {
       // 1. Quizzes
-      const quizRows = await sql`SELECT id, title, description, time_limit_minutes AS "timeLimitMinutes", questions FROM quizzes ORDER BY created_at ASC`;
-      storeData.quizzes = (quizRows || []).map(r => ({
-        id: r.id,
-        title: r.title,
-        description: r.description,
-        timeLimitMinutes: r.timeLimitMinutes,
-        questions: typeof r.questions === 'string' ? JSON.parse(r.questions) : (r.questions || [])
-      }));
+      try {
+        const quizRows = await sql`SELECT id, title, description, time_limit_minutes AS "timeLimitMinutes", questions FROM quizzes ORDER BY created_at ASC`;
+        if (Array.isArray(quizRows)) {
+          storeData.quizzes = quizRows.map(r => ({
+            id: r.id,
+            title: r.title,
+            description: r.description,
+            timeLimitMinutes: r.timeLimitMinutes,
+            questions: typeof r.questions === 'string' ? JSON.parse(r.questions) : (r.questions || [])
+          }));
+        }
+      } catch (e) {}
 
       // 2. Students
-      const studentRows = await sql`SELECT id, name, roll_number AS "rollNumber", username, password, created_at AS "createdAt" FROM students ORDER BY created_at ASC`;
-      storeData.students = (studentRows || []).map(r => ({
-        id: r.id,
-        name: r.name,
-        rollNumber: r.rollNumber,
-        username: r.username,
-        password: r.password,
-        createdAt: r.createdAt
-      }));
+      try {
+        const studentRows = await sql`SELECT id, name, roll_number AS "rollNumber", username, password, created_at AS "createdAt" FROM students ORDER BY created_at ASC`;
+        if (Array.isArray(studentRows)) {
+          storeData.students = studentRows.map(r => ({
+            id: r.id,
+            name: r.name,
+            rollNumber: r.rollNumber,
+            username: r.username,
+            password: r.password,
+            createdAt: r.createdAt
+          }));
+        }
+      } catch (e) {}
 
       // 3. Sessions
-      const sessionRows = await sql`SELECT session_key AS "sessionKey", username, student_name AS "studentName", roll_number AS "rollNumber", quiz_id AS "quizId", quiz_title AS "quizTitle", start_time AS "startTime", time_limit_minutes AS "timeLimitMinutes", status, tab_switch_count AS "tabSwitchCount", violations, answers, jumbled_questions AS "jumbledQuestions", unblocked_at AS "unblockedAt", blocked_at AS "blockedAt", blocked_reason AS "blockedReason" FROM sessions`;
-      (sessionRows || []).forEach(r => {
-        storeData.sessions[r.sessionKey] = {
-          sessionKey: r.sessionKey,
-          username: r.username,
-          studentName: r.studentName,
-          rollNumber: r.rollNumber,
-          quizId: r.quizId,
-          quizTitle: r.quizTitle,
-          startTime: Number(r.startTime),
-          timeLimitMinutes: r.timeLimitMinutes,
-          status: r.status,
-          tabSwitchCount: r.tabSwitchCount || 0,
-          violations: typeof r.violations === 'string' ? JSON.parse(r.violations) : (r.violations || []),
-          answers: typeof r.answers === 'string' ? JSON.parse(r.answers) : (r.answers || {}),
-          jumbledQuestions: typeof r.jumbled_questions === 'string' ? JSON.parse(r.jumbled_questions) : (r.jumbledQuestions || []),
-          unblockedAt: r.unblockedAt,
-          blockedAt: r.blockedAt,
-          blockedReason: r.blockedReason
-        };
-      });
+      try {
+        const sessionRows = await sql`SELECT session_key AS "sessionKey", username, student_name AS "studentName", roll_number AS "rollNumber", quiz_id AS "quizId", quiz_title AS "quizTitle", start_time AS "startTime", time_limit_minutes AS "timeLimitMinutes", status, tab_switch_count AS "tabSwitchCount", violations, answers, jumbled_questions AS "jumbledQuestions", unblocked_at AS "unblockedAt", blocked_at AS "blockedAt", blocked_reason AS "blockedReason" FROM sessions`;
+        if (Array.isArray(sessionRows)) {
+          sessionRows.forEach(r => {
+            storeData.sessions[r.sessionKey] = {
+              sessionKey: r.sessionKey,
+              username: r.username,
+              studentName: r.studentName,
+              rollNumber: r.rollNumber,
+              quizId: r.quizId,
+              quizTitle: r.quizTitle,
+              startTime: Number(r.startTime) || Date.now(),
+              timeLimitMinutes: r.timeLimitMinutes || 15,
+              status: r.status || 'IN_PROGRESS',
+              tabSwitchCount: r.tabSwitchCount || 0,
+              violations: typeof r.violations === 'string' ? JSON.parse(r.violations) : (r.violations || []),
+              answers: typeof r.answers === 'string' ? JSON.parse(r.answers) : (r.answers || {}),
+              jumbledQuestions: typeof r.jumbledQuestions === 'string' ? JSON.parse(r.jumbledQuestions) : (r.jumbledQuestions || []),
+              unblockedAt: r.unblockedAt,
+              blockedAt: r.blockedAt,
+              blockedReason: r.blockedReason
+            };
+          });
+        }
+      } catch (e) {}
 
       // 4. Results
-      const resultRows = await sql`SELECT id, session_key AS "sessionKey", username, student_name AS "studentName", roll_number AS "rollNumber", quiz_id AS "quizId", quiz_title AS "quizTitle", score, total_questions AS "totalQuestions", percentage, time_spent_seconds AS "timeSpentSeconds", tab_switch_count AS "tabSwitchCount", violations_count AS "violationsCount", violations, status, submitted_at AS "submittedAt" FROM results ORDER BY submitted_at DESC`;
-      storeData.results = (resultRows || []).map(r => ({
-        id: r.id,
-        sessionKey: r.sessionKey,
-        username: r.username,
-        studentName: r.studentName,
-        rollNumber: r.rollNumber,
-        quizId: r.quizId,
-        quizTitle: r.quizTitle,
-        score: r.score,
-        totalQuestions: r.totalQuestions,
-        percentage: r.percentage,
-        timeSpentSeconds: r.timeSpentSeconds,
-        tabSwitchCount: r.tabSwitchCount,
-        violationsCount: r.violationsCount,
-        violations: typeof r.violations === 'string' ? JSON.parse(r.violations) : (r.violations || []),
-        status: r.status,
-        submittedAt: r.submittedAt
-      }));
+      try {
+        const resultRows = await sql`SELECT id, session_key AS "sessionKey", username, student_name AS "studentName", roll_number AS "rollNumber", quiz_id AS "quizId", quiz_title AS "quizTitle", score, total_questions AS "totalQuestions", percentage, time_spent_seconds AS "timeSpentSeconds", tab_switch_count AS "tabSwitchCount", violations_count AS "violationsCount", violations, status, submitted_at AS "submittedAt" FROM results ORDER BY submitted_at DESC`;
+        if (Array.isArray(resultRows)) {
+          storeData.results = resultRows.map(r => ({
+            id: r.id,
+            sessionKey: r.sessionKey,
+            username: r.username,
+            studentName: r.studentName,
+            rollNumber: r.rollNumber,
+            quizId: r.quizId,
+            quizTitle: r.quizTitle,
+            score: r.score,
+            totalQuestions: r.totalQuestions,
+            percentage: r.percentage,
+            timeSpentSeconds: r.timeSpentSeconds,
+            tabSwitchCount: r.tabSwitchCount,
+            violationsCount: r.violationsCount,
+            violations: typeof r.violations === 'string' ? JSON.parse(r.violations) : (r.violations || []),
+            status: r.status,
+            submittedAt: r.submittedAt
+          }));
+        }
+      } catch (e) {}
 
       try {
         fs.writeFileSync(STORE_PATH, JSON.stringify(storeData, null, 2), 'utf8');
@@ -108,7 +124,7 @@ const NeonService = {
       return { success: true, data: storeData };
     } catch (err) {
       console.warn('Neon Database Pull Notice:', err.message);
-      return { success: false, error: err.message };
+      return { success: false, error: err.message, data: storeData };
     }
   },
 

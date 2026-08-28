@@ -221,8 +221,12 @@ async function ensureStoreLoaded() {
 
 // Global Middleware: Auto-sync from Neon PostgreSQL on serverless cold-start
 app.use(async (req, res, next) => {
-  if (req.path.startsWith('/api/') || req.path === '/quizzes' || req.path === '/exam') {
-    await ensureStoreLoaded();
+  try {
+    if (req.path.startsWith('/api/') || req.path === '/quizzes' || req.path === '/exam') {
+      await ensureStoreLoaded();
+    }
+  } catch (e) {
+    console.warn('Middleware store load notice:', e.message);
   }
   next();
 });

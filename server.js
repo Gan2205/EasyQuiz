@@ -165,6 +165,42 @@ function broadcastToStudent(username, data) {
   }
 }
 
+// Auto-Restore Data from Firebase Firestore on Cold Lambda Container Start
+async function ensureStoreLoaded() {
+  if (globalMemoryStore && globalMemoryStore.quizzes && globalMemoryStore.quizzes.length > 0) {
+    return globalMemoryStore;
+  }
+
+  const store = readStore();
+  if (store && store.quizzes && store.quizzes.length > 0) {
+    return store;
+  }
+
+  // Auto-pull live data directly from Firebase Firestore
+  try {
+    const pullResult = await FirebaseService.pullFromFirebase();
+    if (pullResult.success && pullResult.data) {
+      globalMemoryStore = pullResult.data;
+      try { fs.writeFileSync(STORE_PATH, JSON.stringify(pullResult.data, null, 2), 'utf8'); } catch (e) {}
+      return globalMemoryStore;
+    }
+  } catch (e) {
+    console.warn('Firebase auto-pull notice:', e.message);
+  }
+
+  return store;
+}
+
+// Global Middleware: Auto-sync from Firebase on serverless cold-start
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api/') || req.path === '/quizzes' || req.path === '/exam') {
+    if (!globalMemoryStore || !globalMemoryStore.quizzes || globalMemoryStore.quizzes.length === 0) {
+      await ensureStoreLoaded();
+    }
+  }
+  next();
+});
+
 // --- REST API ENDPOINTS ---
 
 // 1. Student Auth (Flexible login by Username, Register Number, or Email)

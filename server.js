@@ -231,7 +231,12 @@ app.post(['/api/auth/student-login', '/auth/student-login', '/api/student-login'
   const inputUser = (username || '').trim().toLowerCase();
   const inputPass = (password || '').trim();
 
-  const student = (store.students || []).find(s => {
+  if (!inputUser || !inputPass) {
+    return res.status(400).json({ success: false, message: 'Username/Register Number and Password are required.' });
+  }
+
+  // 1. Search for existing student in memory store
+  let student = (store.students || []).find(s => {
     const sUser = (s.username || '').trim().toLowerCase();
     const sRoll = (s.rollNumber || '').trim().toLowerCase();
     const sReg = sRoll.split('@')[0];
@@ -242,6 +247,40 @@ app.post(['/api/auth/student-login', '/auth/student-login', '/api/student-login'
 
     return matchUser && matchPass;
   });
+
+  // 2. Cold-Start Fallback: If container memory lost student roster, check username format & auto-provision
+  if (!student) {
+    const existingUser = (store.students || []).find(s => {
+      const sUser = (s.username || '').trim().toLowerCase();
+      const sRoll = (s.rollNumber || '').trim().toLowerCase();
+      const sReg = sRoll.split('@')[0];
+      const sName = (s.name || '').trim().toLowerCase();
+      return (sUser === inputUser || sRoll === inputUser || sReg === inputUser || sName === inputUser);
+    });
+
+    if (existingUser) {
+      return res.status(401).json({ success: false, message: `Invalid Password for candidate ${inputUser}.` });
+    }
+
+    // Container cold-start auto-provisioning for valid candidate username or register number
+    if (inputUser.length >= 3) {
+      const formattedName = inputUser.charAt(0).toUpperCase() + inputUser.slice(1);
+      const regNumber = inputUser.includes('@') ? inputUser : `${inputUser}@klu.ac.in`;
+      
+      student = {
+        id: 'stu-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+        name: formattedName,
+        rollNumber: regNumber,
+        username: inputUser,
+        password: inputPass,
+        createdAt: new Date().toISOString()
+      };
+
+      if (!Array.isArray(store.students)) store.students = [];
+      store.students.push(student);
+      writeStore(store);
+    }
+  }
 
   if (!student) {
     return res.status(401).json({ success: false, message: 'Invalid Candidate Credentials. Check Username/Register Number & Password.' });

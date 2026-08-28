@@ -190,6 +190,36 @@ const FirebaseService = {
       console.warn('Firebase Pull Notice:', err.message);
       return { success: false };
     }
+  },
+
+  // Delete single document from Firebase Firestore
+  deleteFromFirebase: async (collection, docId) => {
+    try {
+      await makeRequest(`${FIRESTORE_BASE_URL}/${collection}/${encodeURIComponent(docId)}`, 'DELETE');
+      return { success: true };
+    } catch (err) {
+      console.warn(`Firebase Delete Error (${collection}/${docId}):`, err.message);
+      return { success: false };
+    }
+  },
+
+  // Clear entire collection from Firebase Firestore
+  clearFirebaseCollection: async (collection) => {
+    try {
+      const res = await makeRequest(`${FIRESTORE_BASE_URL}/${collection}`);
+      if (res.data && res.data.documents) {
+        const deleteTasks = res.data.documents.map(doc => {
+          const nameParts = doc.name.split('/');
+          const docId = nameParts[nameParts.length - 1];
+          return makeRequest(`${FIRESTORE_BASE_URL}/${collection}/${encodeURIComponent(docId)}`, 'DELETE');
+        });
+        await Promise.all(deleteTasks);
+      }
+      return { success: true };
+    } catch (err) {
+      console.warn(`Firebase Clear Error (${collection}):`, err.message);
+      return { success: false };
+    }
   }
 };
 

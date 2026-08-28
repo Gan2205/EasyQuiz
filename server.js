@@ -335,7 +335,10 @@ app.delete('/api/admin/quizzes/:id', (req, res) => {
   const store = readStore();
   store.quizzes = store.quizzes.filter(q => q.id !== id);
   writeStore(store);
-  res.json({ success: true });
+  setImmediate(() => {
+    FirebaseService.deleteFromFirebase('quizzes', id).catch(e => {});
+  });
+  res.json({ success: true, count: store.quizzes.length, quizzes: store.quizzes });
 });
 
 // Fisher-Yates Array Shuffler for Per-Candidate Question & Option Jumbling
@@ -986,10 +989,18 @@ app.post(['/api/admin/reset-database', '/admin/reset-database'], (req, res) => {
     store.students = [];
     store.sessions = {};
     store.results = [];
+    setImmediate(() => {
+      FirebaseService.clearFirebaseCollection('quizzes').catch(e => {});
+      FirebaseService.clearFirebaseCollection('students').catch(e => {});
+      FirebaseService.clearFirebaseCollection('results').catch(e => {});
+    });
   } else {
     // Default: Clear all active telemetry sessions & exam results
     store.sessions = {};
     store.results = [];
+    setImmediate(() => {
+      FirebaseService.clearFirebaseCollection('results').catch(e => {});
+    });
   }
 
   writeStore(store);
@@ -1055,6 +1066,9 @@ app.delete('/api/admin/credentials/:id', (req, res) => {
   const store = readStore();
   store.students = store.students.filter(s => s.id !== id);
   writeStore(store);
+  setImmediate(() => {
+    FirebaseService.deleteFromFirebase('students', id).catch(e => {});
+  });
   res.json({ success: true, message: 'Candidate deleted.' });
 });
 
@@ -1073,6 +1087,9 @@ app.delete('/api/admin/results/:id', (req, res) => {
   const store = readStore();
   store.results = store.results.filter(r => r.id !== id);
   writeStore(store);
+  setImmediate(() => {
+    FirebaseService.deleteFromFirebase('results', id).catch(e => {});
+  });
   res.json({ success: true, message: 'Result record deleted.' });
 });
 

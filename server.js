@@ -167,7 +167,7 @@ function broadcastToStudent(username, data) {
 
 // Auto-Restore Data from Firebase Firestore on Cold Lambda Container Start
 async function ensureStoreLoaded() {
-  if (globalMemoryStore && Array.isArray(globalMemoryStore.students) && globalMemoryStore.students.length > 0 && Array.isArray(globalMemoryStore.quizzes) && globalMemoryStore.quizzes.length > 0) {
+  if (globalMemoryStore && Array.isArray(globalMemoryStore.quizzes) && globalMemoryStore.quizzes.length > 0) {
     return globalMemoryStore;
   }
 
@@ -179,11 +179,7 @@ async function ensureStoreLoaded() {
     if (pullResult.success && pullResult.data) {
       if (!globalMemoryStore) globalMemoryStore = store || pullResult.data;
       if (Array.isArray(pullResult.data.quizzes) && pullResult.data.quizzes.length > 0) {
-        pullResult.data.quizzes.forEach(q => {
-          if (!globalMemoryStore.quizzes.some(existingQ => existingQ.id === q.id)) {
-            globalMemoryStore.quizzes.push(q);
-          }
-        });
+        globalMemoryStore.quizzes = pullResult.data.quizzes;
       }
       if (Array.isArray(pullResult.data.students) && pullResult.data.students.length > 0) {
         pullResult.data.students.forEach(s => {
@@ -213,7 +209,7 @@ async function ensureStoreLoaded() {
 // Global Middleware: Auto-sync from Firebase on serverless cold-start
 app.use(async (req, res, next) => {
   if (req.path.startsWith('/api/') || req.path === '/quizzes' || req.path === '/exam') {
-    if (!globalMemoryStore || !Array.isArray(globalMemoryStore.students) || globalMemoryStore.students.length === 0) {
+    if (!globalMemoryStore || !Array.isArray(globalMemoryStore.quizzes) || globalMemoryStore.quizzes.length === 0) {
       await ensureStoreLoaded();
     }
   }
@@ -360,14 +356,14 @@ function shuffleArray(array) {
 }
 
 // 4. Student Starts Exam (Per-Candidate Jumbled Question & Option Order)
-app.post(['/api/exam/start', '/exam/start'], (req, res) => {
+app.post(['/api/exam/start', '/exam/start'], async (req, res) => {
   const { username, quizId } = req.body;
-  const store = readStore();
+  const store = await ensureStoreLoaded();
 
   const cleanUser = (username || '').toLowerCase().trim();
   const cleanRoll = cleanUser.split('@')[0];
 
-  const quiz = store.quizzes.find(q => q.id === quizId) || store.quizzes[0];
+  const quiz = (store.quizzes || []).find(q => q.id === quizId) || (store.quizzes || [])[0];
   const student = store.students.find(s => {
     if (!s) return false;
     const u = (s.username || '').toLowerCase();

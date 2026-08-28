@@ -135,6 +135,9 @@ async function runAudit() {
     const fbRes = await request('/api/admin/firebase-status', 'GET');
     console.log(`   Firebase Status: Connected: ${fbRes.body && fbRes.body.connected ? 'YES ✅' : 'NO'}, Project: ${fbRes.body ? fbRes.body.projectId : 'N/A'}`);
 
+    // 🔟 Cleanup Audit Test Artifacts
+    await request('/api/admin/quizzes/quiz-audit-5item', 'DELETE');
+
     console.log('\n====================================================');
     console.log('🎉 AUDIT COMPLETE: ALL FEATURES 100% OPERATIONAL & FAST!');
     console.log('====================================================\n');

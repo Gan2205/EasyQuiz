@@ -815,40 +815,29 @@ function extractTextFromDocxBuffer(buffer) {
   return rawStr.replace(/[^\x20-\x7E\r\n]/g, ' ');
 }
 
-// PDF Text Stream Cleaner (Strips PDF headers, fonts, binary streams, and extracts clean text)
-function extractTextFromPdfBuffer(buffer) {
+// PDF Text Stream Cleaner (Uses pdf-parse engine for 100% clean PDF text extraction)
+async function extractTextFromPdfBuffer(buffer) {
+  try {
+    const parseFn = typeof pdfParseModule === 'function' ? pdfParseModule : (pdfParseModule.PDFParse || pdfParseModule.default);
+    let text = '';
+    if (typeof parseFn === 'function') {
+      const data = await parseFn(buffer);
+      text = data ? (data.text || '') : '';
+    } else if (pdfParseModule.PDFParse) {
+      const parser = new pdfParseModule.PDFParse({ data: buffer });
+      const data = await parser.getText();
+      text = data ? (data.text || data) : '';
+    }
+    if (text && text.trim().length > 10) {
+      return text;
+    }
+  } catch (err) {
+    console.warn('pdf-parse warning:', err.message);
+  }
+
+  // Fallback: Strip PDF binary structure tags and retain printable ASCII lines
   try {
     const rawStr = buffer.toString('binary');
-    const textPieces = [];
-
-    // Extract text strings enclosed in parentheses ( ... )
-    const strMatches = rawStr.match(/\(([^()\r\n]{2,})\)/g);
-    if (strMatches && strMatches.length > 5) {
-      strMatches.forEach(m => {
-        const clean = m.slice(1, -1).trim();
-        // Exclude PDF stream/metadata tags
-        if (clean && 
-            !clean.includes('/Font') && 
-            !clean.includes('/Helvetica') && 
-            !clean.includes('WinAnsi') && 
-            !clean.includes('endobj') && 
-            !clean.includes('C2PA') && 
-            !clean.includes('ReportLab') && 
-            !clean.includes('/BaseFont') &&
-            !clean.includes('/Subtype') &&
-            !clean.includes('ProcSet') &&
-            !clean.startsWith('/') &&
-            !clean.startsWith('%PDF')) {
-          textPieces.push(clean);
-        }
-      });
-    }
-
-    if (textPieces.length > 5) {
-      return textPieces.join('\n');
-    }
-
-    // Fallback: Strip PDF binary structure tags and retain printable ASCII lines
     const asciiText = rawStr
       .replace(/%PDF-[\s\S]*?obj/gi, '')
       .replace(/endobj/gi, '')
@@ -901,7 +890,7 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
   });
 
   rawLines.forEach(line => {
-    // Filter out PDF binary headers & metadata lines
+    // Filter out PDF binary headers, metadata lines, & header row
     if (line.toLowerCase() === 'sample quiz' || 
         line.startsWith('PK') || 
         line.includes('[Content_Types]') ||
@@ -913,7 +902,49 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
         line.includes('/Subtype') ||
         line.includes('/Type') ||
         line.includes('ReportLab') ||
-        line.includes('C2PA')) return;
+        line.includes('C2PA') ||
+        line.startsWith('No. Question Option A') ||
+        line.startsWith('Basic Quiz Test Questions') ||
+        line.startsWith('Use these questions to test')) return;
+
+    // Single-line PDF Table row item: "1 What is 10 + 15? 20 25 30 35 B" or "1 What is the capital of India? New Delhi Mumbai Chennai Kolkata A"
+    const singleLineTableMatch = line.match(/^(\d+)[\s\.\)]+(.*?[\?:]?)\s+(.+)\s+([A-Da-d1-4])$/);
+    if (singleLineTableMatch) {
+      const qNum = parseInt(singleLineTableMatch[1], 10);
+      const qPrompt = singleLineTableMatch[2].trim();
+      const rawOpts = singleLineTableMatch[3].trim();
+      const ansChar = singleLineTableMatch[4].trim().toUpperCase();
+      
+      let correctIdx = 0;
+      if (ansChar === 'B' || ansChar === '2') correctIdx = 1;
+      else if (ansChar === 'C' || ansChar === '3') correctIdx = 2;
+      else if (ansChar === 'D' || ansChar === '4') correctIdx = 3;
+
+      let opts = [];
+      if (rawOpts.includes('\t')) {
+        opts = rawOpts.split('\t').map(o => o.trim()).filter(o => o.length > 0);
+      } else {
+        opts = rawOpts.split(/\s{2,}/).map(o => o.trim()).filter(o => o.length > 0);
+      }
+      if (opts.length < 4) {
+        const parts = rawOpts.split(/\s+/);
+        if (parts.length === 4) {
+          opts = parts;
+        } else {
+          opts = [rawOpts, 'N/A', 'N/A', 'N/A'];
+        }
+      }
+
+      while (opts.length < 4) opts.push('N/A');
+
+      questions.push({
+        id: 'q-' + Date.now() + '-' + qNum,
+        text: qPrompt,
+        options: opts.slice(0, 4),
+        correctAnswer: correctIdx
+      });
+      return;
+    }
 
     const isQuestionPrefix = line.match(/^(?:Q(?:uestion)?\s*\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
     const isExplicitOptionPrefix = line.match(/^(?:[A-Da-d][\.\)]|\([A-Da-d]\)|Option\s*[A-Da-d1-4]:?)\s*/i);

@@ -167,22 +167,32 @@ function broadcastToStudent(username, data) {
 
 // Auto-Restore Data from Firebase Firestore on Cold Lambda Container Start
 async function ensureStoreLoaded() {
-  if (globalMemoryStore && Array.isArray(globalMemoryStore.students) && globalMemoryStore.students.length > 0) {
+  if (globalMemoryStore && Array.isArray(globalMemoryStore.students) && globalMemoryStore.students.length > 0 && Array.isArray(globalMemoryStore.quizzes) && globalMemoryStore.quizzes.length > 0) {
     return globalMemoryStore;
   }
 
   const store = readStore();
-  if (store && Array.isArray(store.students) && store.students.length > 0) {
-    globalMemoryStore = store;
-    return store;
-  }
 
   // Auto-pull live data directly from Firebase Firestore
   try {
     const pullResult = await FirebaseService.pullFromFirebase();
     if (pullResult.success && pullResult.data) {
-      globalMemoryStore = pullResult.data;
-      try { fs.writeFileSync(STORE_PATH, JSON.stringify(pullResult.data, null, 2), 'utf8'); } catch (e) {}
+      if (!globalMemoryStore) globalMemoryStore = store || pullResult.data;
+      if (Array.isArray(pullResult.data.quizzes) && pullResult.data.quizzes.length > 0) {
+        pullResult.data.quizzes.forEach(q => {
+          if (!globalMemoryStore.quizzes.some(existingQ => existingQ.id === q.id)) {
+            globalMemoryStore.quizzes.push(q);
+          }
+        });
+      }
+      if (Array.isArray(pullResult.data.students) && pullResult.data.students.length > 0) {
+        pullResult.data.students.forEach(s => {
+          if (!globalMemoryStore.students.some(existingS => existingS.id === s.id)) {
+            globalMemoryStore.students.push(s);
+          }
+        });
+      }
+      try { fs.writeFileSync(STORE_PATH, JSON.stringify(globalMemoryStore, null, 2), 'utf8'); } catch (e) {}
       return globalMemoryStore;
     }
   } catch (e) {
@@ -200,6 +210,11 @@ app.use(async (req, res, next) => {
     }
   }
   next();
+});
+
+// Admin Firebase Status Endpoint
+app.get('/api/admin/firebase-status', (req, res) => {
+  res.json(FirebaseService.getStatus());
 });
 
 // --- REST API ENDPOINTS ---

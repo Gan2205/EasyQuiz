@@ -3,7 +3,71 @@
     "username": "SCRS",
     "password": "SCRS@2026"
   },
-  "quizzes": [],
+  "quizzes": [
+    {
+      "id": "quiz-audit-5item",
+      "title": "Full Audit 5-Item Assessment",
+      "description": "Institutional Performance Audit Module",
+      "timeLimitMinutes": 20,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Item 1 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 0
+        },
+        {
+          "id": "q2",
+          "text": "Item 2 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 1
+        },
+        {
+          "id": "q3",
+          "text": "Item 3 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 2
+        },
+        {
+          "id": "q4",
+          "text": "Item 4 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 3
+        },
+        {
+          "id": "q5",
+          "text": "Item 5 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 0
+        }
+      ]
+    }
+  ],
   "students": [
     {
       "id": "stu-1787853014125-122",
@@ -30,6 +94,113 @@
       "createdAt": "2026-08-27T17:50:14.126Z"
     }
   ],
-  "sessions": {},
-  "results": []
+  "sessions": {
+    "ganesh_quiz-audit-5item": {
+      "sessionKey": "ganesh_quiz-audit-5item",
+      "username": "ganesh",
+      "studentName": "Ganesh",
+      "rollNumber": "99230040791@klu.ac.in",
+      "quizId": "quiz-audit-5item",
+      "quizTitle": "Full Audit 5-Item Assessment",
+      "startTime": 1787896574409,
+      "timeLimitMinutes": 20,
+      "status": "COMPLETED",
+      "tabSwitchCount": 0,
+      "violations": [
+        {
+          "type": "WIN_G_ATTEMPT",
+          "details": "Audit Test Win+G Interception",
+          "timestamp": "11:26:14 am"
+        }
+      ],
+      "answers": {},
+      "jumbledQuestions": [
+        {
+          "id": "q3",
+          "text": "Item 3 Question Prompt",
+          "options": [
+            "Opt C",
+            "Opt D",
+            "Opt A",
+            "Opt B"
+          ],
+          "correctAnswer": 0
+        },
+        {
+          "id": "q2",
+          "text": "Item 2 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt D",
+            "Opt B",
+            "Opt C"
+          ],
+          "correctAnswer": 2
+        },
+        {
+          "id": "q1",
+          "text": "Item 1 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt D",
+            "Opt C",
+            "Opt B"
+          ],
+          "correctAnswer": 0
+        },
+        {
+          "id": "q4",
+          "text": "Item 4 Question Prompt",
+          "options": [
+            "Opt C",
+            "Opt A",
+            "Opt D",
+            "Opt B"
+          ],
+          "correctAnswer": 2
+        },
+        {
+          "id": "q5",
+          "text": "Item 5 Question Prompt",
+          "options": [
+            "Opt B",
+            "Opt D",
+            "Opt C",
+            "Opt A"
+          ],
+          "correctAnswer": 3
+        }
+      ],
+      "blockedAt": "2026-08-28T05:56:14.585Z",
+      "blockedReason": "Audit Test Win+G Interception",
+      "unblockedAt": "2026-08-28T05:56:14.636Z",
+      "finalScore": 20
+    }
+  },
+  "results": [
+    {
+      "id": "res-1787896574685",
+      "sessionKey": "ganesh_quiz-audit-5item",
+      "username": "ganesh",
+      "studentName": "Ganesh",
+      "rollNumber": "99230040791@klu.ac.in",
+      "quizId": "quiz-audit-5item",
+      "quizTitle": "Full Audit 5-Item Assessment",
+      "score": 1,
+      "totalQuestions": 5,
+      "percentage": 20,
+      "timeSpentSeconds": 120,
+      "tabSwitchCount": 0,
+      "violationsCount": 1,
+      "violations": [
+        {
+          "type": "WIN_G_ATTEMPT",
+          "details": "Audit Test Win+G Interception",
+          "timestamp": "11:26:14 am"
+        }
+      ],
+      "status": "PASSED",
+      "submittedAt": "2026-08-28T05:56:14.685Z"
+    }
+  ]
 }

@@ -815,6 +815,57 @@ function extractTextFromDocxBuffer(buffer) {
   return rawStr.replace(/[^\x20-\x7E\r\n]/g, ' ');
 }
 
+// PDF Text Stream Cleaner (Strips PDF headers, fonts, binary streams, and extracts clean text)
+function extractTextFromPdfBuffer(buffer) {
+  try {
+    const rawStr = buffer.toString('binary');
+    const textPieces = [];
+
+    // Extract text strings enclosed in parentheses ( ... )
+    const strMatches = rawStr.match(/\(([^()\r\n]{2,})\)/g);
+    if (strMatches && strMatches.length > 5) {
+      strMatches.forEach(m => {
+        const clean = m.slice(1, -1).trim();
+        // Exclude PDF stream/metadata tags
+        if (clean && 
+            !clean.includes('/Font') && 
+            !clean.includes('/Helvetica') && 
+            !clean.includes('WinAnsi') && 
+            !clean.includes('endobj') && 
+            !clean.includes('C2PA') && 
+            !clean.includes('ReportLab') && 
+            !clean.includes('/BaseFont') &&
+            !clean.includes('/Subtype') &&
+            !clean.includes('ProcSet') &&
+            !clean.startsWith('/') &&
+            !clean.startsWith('%PDF')) {
+          textPieces.push(clean);
+        }
+      });
+    }
+
+    if (textPieces.length > 5) {
+      return textPieces.join('\n');
+    }
+
+    // Fallback: Strip PDF binary structure tags and retain printable ASCII lines
+    const asciiText = rawStr
+      .replace(/%PDF-[\s\S]*?obj/gi, '')
+      .replace(/endobj/gi, '')
+      .replace(/stream[\s\S]*?endstream/gi, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/[^\x20-\x7E\r\n]/g, ' ');
+
+    const lines = asciiText.split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(l => l.length > 3 && !l.startsWith('/') && !l.includes('endobj') && !l.includes('WinAnsi') && !l.includes('Helvetica'));
+
+    return lines.join('\n');
+  } catch (e) {
+    return buffer.toString('utf8').replace(/[^\x20-\x7E\r\n]/g, ' ');
+  }
+}
+
 // Helper to extract clean option texts from a line
 function extractOptionsFromLine(line) {
   return line
@@ -831,8 +882,38 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
   const questions = [];
   let currentQ = null;
 
+  // Track answer key mapping if present (e.g. "Answer Key: 1-A, 2-B, 3-B...")
+  const answerKeyMap = {};
+  text.replace(/(?:Answer\s*Key:?|Answers:?)\s*([^\r\n]+)/gi, (m, keyStr) => {
+    const pairs = keyStr.match(/(\d+)\s*[-:]\s*([a-dA-D1-4])/g);
+    if (pairs) {
+      pairs.forEach(p => {
+        const parts = p.split(/[-:]/);
+        const qNum = parseInt(parts[0].trim(), 10);
+        const ansChar = parts[1].trim().toUpperCase();
+        let ansIdx = 0;
+        if (ansChar === 'B' || ansChar === '2') ansIdx = 1;
+        else if (ansChar === 'C' || ansChar === '3') ansIdx = 2;
+        else if (ansChar === 'D' || ansChar === '4') ansIdx = 3;
+        answerKeyMap[qNum] = ansIdx;
+      });
+    }
+  });
+
   rawLines.forEach(line => {
-    if (line.toLowerCase() === 'sample quiz' || line.startsWith('PK') || line.includes('[Content_Types]')) return;
+    // Filter out PDF binary headers & metadata lines
+    if (line.toLowerCase() === 'sample quiz' || 
+        line.startsWith('PK') || 
+        line.includes('[Content_Types]') ||
+        line.startsWith('%PDF') ||
+        line.includes('endobj') ||
+        line.includes('/BaseFont') ||
+        line.includes('/Helvetica') ||
+        line.includes('/WinAnsiEncoding') ||
+        line.includes('/Subtype') ||
+        line.includes('/Type') ||
+        line.includes('ReportLab') ||
+        line.includes('C2PA')) return;
 
     const isQuestionPrefix = line.match(/^(?:Q(?:uestion)?\s*\d+[:.]?|\d+[\.\)]|\?\s*)\s*(.*)/i);
     const isExplicitOptionPrefix = line.match(/^(?:[A-Da-d][\.\)]|\([A-Da-d]\)|Option\s*[A-Da-d1-4]:?)\s*/i);
@@ -855,11 +936,21 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
         while (currentQ.options.length < 4) currentQ.options.push('N/A');
         questions.push(currentQ);
 
+        const qNumber = questions.length + 1;
         currentQ = {
-          id: 'q-' + Date.now() + '-' + questions.length,
+          id: 'q-' + Date.now() + '-' + qNumber,
           text: isQuestionPrefix[1].trim() || line,
           options: [],
-          correctAnswer: 0
+          correctAnswer: answerKeyMap[qNumber] !== undefined ? answerKeyMap[qNumber] : 0
+        };
+        return;
+      } else {
+        const qNumber = questions.length + 1;
+        currentQ = {
+          id: 'q-' + Date.now() + '-' + qNumber,
+          text: isQuestionPrefix[1].trim() || line,
+          options: [],
+          correctAnswer: answerKeyMap[qNumber] !== undefined ? answerKeyMap[qNumber] : 0
         };
         return;
       }
@@ -880,7 +971,7 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
       }
     } else {
       currentQ = {
-        id: 'q-' + Date.now() + '-' + questions.length,
+        id: 'q-' + Date.now() + '-0',
         text: line,
         options: [],
         correctAnswer: 0
@@ -892,6 +983,13 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
     while (currentQ.options.length < 4) currentQ.options.push('N/A');
     questions.push(currentQ);
   }
+
+  // Apply answer key map if present
+  questions.forEach((q, qIdx) => {
+    if (answerKeyMap[qIdx + 1] !== undefined) {
+      q.correctAnswer = answerKeyMap[qIdx + 1];
+    }
+  });
 
   return questions;
 }
@@ -945,6 +1043,8 @@ app.post(['/api/admin/upload-questions', '/admin/upload-questions'], upload.sing
 
       if (fileName.endsWith('.docx')) {
         rawText = extractTextFromDocxBuffer(fileBuffer);
+      } else if (fileName.endsWith('.pdf')) {
+        rawText = extractTextFromPdfBuffer(fileBuffer);
       } else {
         rawText = fileBuffer.toString('utf8');
       }

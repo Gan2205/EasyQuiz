@@ -3,7 +3,71 @@
     "username": "SCRS",
     "password": "SCRS@2026"
   },
-  "quizzes": [],
+  "quizzes": [
+    {
+      "id": "quiz-audit-5item",
+      "title": "Full Audit 5-Item Assessment",
+      "description": "Institutional Performance Audit Module",
+      "timeLimitMinutes": 20,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Item 1 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 0
+        },
+        {
+          "id": "q2",
+          "text": "Item 2 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 1
+        },
+        {
+          "id": "q3",
+          "text": "Item 3 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 2
+        },
+        {
+          "id": "q4",
+          "text": "Item 4 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 3
+        },
+        {
+          "id": "q5",
+          "text": "Item 5 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 0
+        }
+      ]
+    }
+  ],
   "students": [
     {
       "id": "stu-1787853014125-122",
@@ -111,6 +175,4455 @@
       "blockedReason": "Audit Test Win+G Interception",
       "unblockedAt": "2026-08-28T05:56:14.636Z",
       "finalScore": 20
+    },
+    "rahul_quiz-audit-5item": {
+      "sessionKey": "rahul_quiz-audit-5item",
+      "username": "rahul",
+      "studentName": "rahul",
+      "rollNumber": "99230040546@klu.ac.in",
+      "quizId": "quiz-audit-5item",
+      "quizTitle": "Full Audit 5-Item Assessment",
+      "startTime": 1787901296540,
+      "timeLimitMinutes": 20,
+      "status": "BLOCKED",
+      "tabSwitchCount": 0,
+      "violations": [
+        {
+          "type": "WIN_G_ATTEMPT",
+          "details": "Win Key / Win + G Attempt - EXAM SUSPENDED IMMEDIATELY",
+          "timestamp": "1:01:55 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access suspended immediately due to prohibited Windows key or Win+G attempt.",
+          "timestamp": "1:01:55 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:55 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:55 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:55 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:55 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:56 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:57 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:58 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:01:59 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:00 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:01 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:02 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:03 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:04 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:05 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:06 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:07 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:08 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:09 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:10 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:11 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:12 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:13 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:14 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:15 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:16 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        },
+        {
+          "type": "EXAM_BLOCKED",
+          "details": "Assessment access restricted by Administrator.",
+          "timestamp": "1:02:17 pm"
+        }
+      ],
+      "answers": {},
+      "jumbledQuestions": [
+        {
+          "id": "q4",
+          "text": "Item 4 Question Prompt",
+          "options": [
+            "Opt A",
+            "Opt B",
+            "Opt C",
+            "Opt D"
+          ],
+          "correctAnswer": 3
+        },
+        {
+          "id": "q2",
+          "text": "Item 2 Question Prompt",
+          "options": [
+            "Opt D",
+            "Opt A",
+            "Opt B",
+            "Opt C"
+          ],
+          "correctAnswer": 2
+        },
+        {
+          "id": "q3",
+          "text": "Item 3 Question Prompt",
+          "options": [
+            "Opt C",
+            "Opt D",
+            "Opt A",
+            "Opt B"
+          ],
+          "correctAnswer": 0
+        },
+        {
+          "id": "q5",
+          "text": "Item 5 Question Prompt",
+          "options": [
+            "Opt B",
+            "Opt C",
+            "Opt A",
+            "Opt D"
+          ],
+          "correctAnswer": 2
+        },
+        {
+          "id": "q1",
+          "text": "Item 1 Question Prompt",
+          "options": [
+            "Opt C",
+            "Opt A",
+            "Opt D",
+            "Opt B"
+          ],
+          "correctAnswer": 1
+        }
+      ],
+      "blockedAt": "2026-08-28T07:32:17.200Z",
+      "blockedReason": "Assessment access restricted by Administrator."
     }
   },
   "results": [

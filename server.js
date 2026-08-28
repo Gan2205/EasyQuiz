@@ -286,27 +286,32 @@ app.post('/api/admin/quizzes', (req, res) => {
   const store = readStore();
 
   const timeLimit = parseInt(timeLimitMinutes, 10) || 15;
+  const cleanTitle = (title || 'Assessment Module').trim();
+  const cleanDesc = (description || 'Institutional Assessment Module').trim();
+  const cleanQuestions = Array.isArray(questions) ? questions : [];
   
   if (id) {
-    // Edit existing
+    // Edit existing or append if ID missing from store
     const idx = store.quizzes.findIndex(q => q.id === id);
     if (idx !== -1) {
-      store.quizzes[idx] = { id, title, description, timeLimitMinutes: timeLimit, questions };
+      store.quizzes[idx] = { id, title: cleanTitle, description: cleanDesc, timeLimitMinutes: timeLimit, questions: cleanQuestions };
+    } else {
+      store.quizzes.push({ id, title: cleanTitle, description: cleanDesc, timeLimitMinutes: timeLimit, questions: cleanQuestions });
     }
   } else {
     // Create new
     const newId = 'quiz-' + Date.now();
     store.quizzes.push({
       id: newId,
-      title,
-      description,
+      title: cleanTitle,
+      description: cleanDesc,
       timeLimitMinutes: timeLimit,
-      questions
+      questions: cleanQuestions
     });
   }
 
   writeStore(store);
-  res.json({ success: true });
+  res.json({ success: true, count: store.quizzes.length, quizzes: store.quizzes });
 });
 
 // Admin Delete Quiz

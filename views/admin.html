@@ -1056,6 +1056,7 @@
     }
 
     async function saveQuiz() {
+      const id = document.getElementById('edit-quiz-id') ? document.getElementById('edit-quiz-id').value : '';
       const title = document.getElementById('quiz-title-input').value.trim();
       const description = document.getElementById('quiz-desc-input').value.trim();
       const timeLimitMinutes = document.getElementById('quiz-time-input').value;
@@ -1065,11 +1066,17 @@
         return;
       }
 
+      if (!questionsBuffer || questionsBuffer.length === 0) {
+        alert('Please add or import at least one question item.');
+        return;
+      }
+
       try {
         const res = await fetch('/api/admin/quizzes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            id: id || undefined,
             title,
             description,
             timeLimitMinutes,
@@ -1080,6 +1087,8 @@
         if (data.success) {
           closeQuizEditor();
           fetchQuizzes();
+        } else {
+          alert(data.message || 'Failed to save assessment module.');
         }
       } catch (e) {
         alert('Failed to save assessment module.');

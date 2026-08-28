@@ -10,6 +10,7 @@ const https = require('https');
 const IS_VERCEL = !!(process.env.VERCEL || process.env.NOW_BUILDER);
 const STORE_PATH = IS_VERCEL ? path.join('/tmp', 'store.json') : path.join(__dirname, '..', 'data', 'store.json');
 const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || 'studio-8450670559-9edfe';
+const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyAvaWG6iZSsqwbZClwcycukPucYW9rexvk';
 
 // Firestore REST API Endpoint Base
 const FIRESTORE_BASE_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents`;
@@ -20,7 +21,8 @@ let lastSyncTimestamp = new Date().toISOString();
 // Helper for HTTP/HTTPS Requests
 function makeRequest(url, method = 'GET', data = null) {
   return new Promise((resolve, reject) => {
-    const urlObj = new URL(url);
+    const urlWithKey = url.includes('key=') ? url : (url.includes('?') ? `${url}&key=${FIREBASE_API_KEY}` : `${url}?key=${FIREBASE_API_KEY}`);
+    const urlObj = new URL(urlWithKey);
     const options = {
       hostname: urlObj.hostname,
       path: urlObj.pathname + urlObj.search,

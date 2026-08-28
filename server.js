@@ -175,14 +175,17 @@ async function ensureStoreLoaded() {
   // Auto-pull live data directly from Firebase Firestore
   try {
     const pullResult = await FirebaseService.pullFromFirebase();
-    if (pullResult.success && pullResult.data) {
-      if (Array.isArray(pullResult.data.quizzes)) {
+    if (pullResult && pullResult.success && pullResult.data) {
+      if (Array.isArray(pullResult.data.quizzes) && pullResult.data.quizzes.length > 0) {
         globalMemoryStore.quizzes = pullResult.data.quizzes;
       }
       if (Array.isArray(pullResult.data.students) && pullResult.data.students.length > 0) {
         if (!Array.isArray(globalMemoryStore.students)) globalMemoryStore.students = [];
         pullResult.data.students.forEach(s => {
-          const idx = globalMemoryStore.students.findIndex(existingS => existingS.id === s.id || (existingS.username && s.username && existingS.username.toLowerCase() === s.username.toLowerCase()));
+          const idx = globalMemoryStore.students.findIndex(existingS => 
+            existingS.id === s.id || 
+            (existingS.username && s.username && existingS.username.toLowerCase() === s.username.toLowerCase())
+          );
           if (idx !== -1) {
             globalMemoryStore.students[idx] = s;
           } else {
@@ -198,7 +201,6 @@ async function ensureStoreLoaded() {
           }
         });
       }
-      try { fs.writeFileSync(STORE_PATH, JSON.stringify(globalMemoryStore, null, 2), 'utf8'); } catch (e) {}
     }
   } catch (e) {
     console.warn('Firebase auto-pull notice:', e.message);
@@ -210,9 +212,7 @@ async function ensureStoreLoaded() {
 // Global Middleware: Auto-sync from Firebase on serverless cold-start
 app.use(async (req, res, next) => {
   if (req.path.startsWith('/api/') || req.path === '/quizzes' || req.path === '/exam') {
-    if (!globalMemoryStore || !Array.isArray(globalMemoryStore.quizzes) || globalMemoryStore.quizzes.length === 0) {
-      await ensureStoreLoaded();
-    }
+    await ensureStoreLoaded();
   }
   next();
 });
@@ -232,12 +232,15 @@ app.post(['/api/auth/student-login', '/auth/student-login', '/api/student-login'
   const inputPass = (password || '').trim();
 
   const student = (store.students || []).find(s => {
-    const matchUser = (s.username || '').toLowerCase() === inputUser;
-    const matchRoll = (s.rollNumber || '').toLowerCase() === inputUser;
-    const matchReg = (s.rollNumber || '').split('@')[0].toLowerCase() === inputUser;
-    const matchName = (s.name || '').toLowerCase() === inputUser;
+    const sUser = (s.username || '').trim().toLowerCase();
+    const sRoll = (s.rollNumber || '').trim().toLowerCase();
+    const sReg = sRoll.split('@')[0];
+    const sName = (s.name || '').trim().toLowerCase();
+
+    const matchUser = (sUser === inputUser || sRoll === inputUser || sReg === inputUser || sName === inputUser);
     const matchPass = (s.password || '').trim() === inputPass;
-    return (matchUser || matchRoll || matchReg || matchName) && matchPass;
+
+    return matchUser && matchPass;
   });
 
   if (!student) {

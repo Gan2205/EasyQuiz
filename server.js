@@ -1026,7 +1026,7 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
 }
 
 // Admin Upload & Parse Questions Document (.docx, .pdf, .txt, .csv, .xlsx, .json)
-app.post(['/api/admin/upload-questions', '/admin/upload-questions'], upload.single('questionFile'), (req, res) => {
+app.post(['/api/admin/upload-questions', '/admin/upload-questions'], upload.single('questionFile'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'No question document uploaded.' });
   }
@@ -1075,7 +1075,7 @@ app.post(['/api/admin/upload-questions', '/admin/upload-questions'], upload.sing
       if (fileName.endsWith('.docx')) {
         rawText = extractTextFromDocxBuffer(fileBuffer);
       } else if (fileName.endsWith('.pdf')) {
-        rawText = extractTextFromPdfBuffer(fileBuffer);
+        rawText = await extractTextFromPdfBuffer(fileBuffer);
       } else {
         rawText = fileBuffer.toString('utf8');
       }

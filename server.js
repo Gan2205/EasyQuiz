@@ -479,18 +479,17 @@ app.post(['/api/exam/incident', '/exam/incident'], (req, res) => {
 
   session.violations.push(incident);
 
-  // Lock session ONLY if Win+G, explicit EXAM_BLOCKED, or 2nd violation (suspended)
-  if (violationType === 'WIN_G_ATTEMPT' || violationType === 'EXAM_BLOCKED') {
+  // Lock session if Win+G, EXAM_BLOCKED, EXTENSION_DETECTED, BLOCKED_KEY, or 2nd focus loss/fullscreen exit
+  if (violationType === 'WIN_G_ATTEMPT' || violationType === 'EXAM_BLOCKED' || violationType === 'EXTENSION_DETECTED' || violationType === 'BLOCKED_KEY') {
     session.status = 'BLOCKED';
     session.blockedAt = new Date().toISOString();
     session.blockedReason = details || 'Assessment access suspended due to security policy violation.';
   } else if (violationType === 'FULLSCREEN_EXIT' || violationType === 'TAB_SWITCH' || violationType === 'WINDOW_BLUR') {
-    if (details && details.toLowerCase().includes('suspended')) {
+    session.tabSwitchCount = (session.tabSwitchCount || 0) + 1;
+    if (session.tabSwitchCount >= 2 || (details && details.toLowerCase().includes('suspended'))) {
       session.status = 'BLOCKED';
       session.blockedAt = new Date().toISOString();
-      session.blockedReason = details;
-    } else if (details && details.toLowerCase().includes('warning')) {
-      session.tabSwitchCount = 1;
+      session.blockedReason = details || 'Assessment access suspended due to repeated focus loss or fullscreen exit.';
     }
   }
 
@@ -1194,9 +1193,9 @@ app.get(['/api/admin/credentials', '/admin/credentials'], (req, res) => {
   res.json(store.students || []);
 });
 
-// Admin Get Live Proctoring Sessions List
-app.get(['/api/admin/sessions', '/admin/sessions', '/api/admin/live-sessions', '/admin/live-sessions'], (req, res) => {
-  const store = readStore();
+// Admin Get Live Proctoring Sessions List (Auto-pulled from Firebase Firestore)
+app.get(['/api/admin/sessions', '/admin/sessions', '/api/admin/live-sessions', '/admin/live-sessions'], async (req, res) => {
+  const store = await ensureStoreLoaded();
   const sessions = Object.values(store.sessions || {});
   res.json(sessions);
 });

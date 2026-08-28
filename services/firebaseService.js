@@ -134,7 +134,16 @@ const FirebaseService = {
         });
       }
 
-      // 4. Sync Results in Parallel
+      // 4. Sync Active Telemetry Sessions in Parallel
+      if (storeData.sessions && typeof storeData.sessions === 'object') {
+        Object.entries(storeData.sessions).forEach(([sKey, sessionObj]) => {
+          syncTasks.push(makeRequest(`${FIRESTORE_BASE_URL}/sessions/${encodeURIComponent(sKey)}`, 'PATCH', {
+            fields: objectToFirestoreFields(sessionObj)
+          }));
+        });
+      }
+
+      // 5. Sync Results in Parallel
       if (Array.isArray(storeData.results)) {
         storeData.results.forEach(resItem => {
           syncTasks.push(makeRequest(`${FIRESTORE_BASE_URL}/results/${resItem.id}`, 'PATCH', {
@@ -177,13 +186,24 @@ const FirebaseService = {
         storeData.students = studentRes.data.documents.map(doc => firestoreFieldsToObject(doc.fields));
       }
 
+      // Read /sessions
+      const sessionRes = await makeRequest(`${FIRESTORE_BASE_URL}/sessions`);
+      if (sessionRes.data && sessionRes.data.documents) {
+        sessionRes.data.documents.forEach(doc => {
+          const sessObj = firestoreFieldsToObject(doc.fields);
+          if (sessObj && sessObj.sessionKey) {
+            storeData.sessions[sessObj.sessionKey] = sessObj;
+          }
+        });
+      }
+
       // Read /results
       const resultRes = await makeRequest(`${FIRESTORE_BASE_URL}/results`);
       if (resultRes.data && resultRes.data.documents) {
         storeData.results = resultRes.data.documents.map(doc => firestoreFieldsToObject(doc.fields));
       }
 
-      if (storeData.quizzes.length > 0 || storeData.students.length > 0) {
+      if (storeData.quizzes.length > 0 || storeData.students.length > 0 || Object.keys(storeData.sessions).length > 0) {
         fs.writeFileSync(STORE_PATH, JSON.stringify(storeData, null, 2), 'utf8');
       }
 

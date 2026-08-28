@@ -184,34 +184,10 @@ async function ensureStoreLoaded() {
   try {
     const pullResult = await NeonService.pullFromNeon();
     if (pullResult && pullResult.success && pullResult.data) {
-      if (Array.isArray(pullResult.data.quizzes) && pullResult.data.quizzes.length > 0) {
-        globalMemoryStore.quizzes = pullResult.data.quizzes;
-      }
-      if (Array.isArray(pullResult.data.students) && pullResult.data.students.length > 0) {
-        if (!Array.isArray(globalMemoryStore.students)) globalMemoryStore.students = [];
-        pullResult.data.students.forEach(s => {
-          const idx = globalMemoryStore.students.findIndex(existingS => 
-            existingS.id === s.id || 
-            (existingS.username && s.username && existingS.username.toLowerCase() === s.username.toLowerCase())
-          );
-          if (idx !== -1) {
-            globalMemoryStore.students[idx] = s;
-          } else {
-            globalMemoryStore.students.push(s);
-          }
-        });
-      }
-      if (pullResult.data.sessions && typeof pullResult.data.sessions === 'object') {
-        globalMemoryStore.sessions = { ...globalMemoryStore.sessions, ...pullResult.data.sessions };
-      }
-      if (Array.isArray(pullResult.data.results) && pullResult.data.results.length > 0) {
-        if (!Array.isArray(globalMemoryStore.results)) globalMemoryStore.results = [];
-        pullResult.data.results.forEach(r => {
-          if (!globalMemoryStore.results.some(existingR => existingR.id === r.id)) {
-            globalMemoryStore.results.push(r);
-          }
-        });
-      }
+      globalMemoryStore.quizzes = pullResult.data.quizzes || [];
+      globalMemoryStore.students = pullResult.data.students || [];
+      globalMemoryStore.sessions = pullResult.data.sessions || {};
+      globalMemoryStore.results = pullResult.data.results || [];
     }
   } catch (e) {
     console.warn('Neon DB auto-pull notice:', e.message);

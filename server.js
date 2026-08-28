@@ -1212,36 +1212,39 @@ app.post(['/api/admin/deduplicate-candidates', '/admin/deduplicate-candidates'],
 });
 
 // Admin Reset System Data (Clear sessions/results or Full Reset)
-app.post(['/api/admin/reset-database', '/admin/reset-database'], (req, res) => {
+app.post(['/api/admin/reset-database', '/admin/reset-database'], async (req, res) => {
   const { resetType } = req.body; // 'SESSIONS_ONLY' or 'FULL_RESET'
-  const store = readStore();
+  const store = await ensureStoreLoaded();
 
-  if (resetType === 'FULL_RESET') {
-    store.quizzes = [];
-    store.students = [];
-    store.sessions = {};
-    store.results = [];
-    setImmediate(() => {
-      FirebaseService.clearFirebaseCollection('quizzes').catch(e => {});
-      FirebaseService.clearFirebaseCollection('students').catch(e => {});
-      FirebaseService.clearFirebaseCollection('results').catch(e => {});
+  try {
+    if (resetType === 'FULL_RESET') {
+      store.quizzes = [];
+      store.students = [];
+      store.sessions = {};
+      store.results = [];
+      await NeonService.clearTable('quizzes');
+      await NeonService.clearTable('students');
+      await NeonService.clearTable('sessions');
+      await NeonService.clearTable('results');
+    } else {
+      // Default: Clear all active telemetry sessions & exam results
+      store.sessions = {};
+      store.results = [];
+      await NeonService.clearTable('sessions');
+      await NeonService.clearTable('results');
+    }
+
+    writeStore(store);
+
+    res.json({
+      success: true,
+      message: resetType === 'FULL_RESET' ? 'Full platform database reset completed.' : 'Telemetry sessions and exam results cleared successfully.',
+      store
     });
-  } else {
-    // Default: Clear all active telemetry sessions & exam results
-    store.sessions = {};
-    store.results = [];
-    setImmediate(() => {
-      FirebaseService.clearFirebaseCollection('results').catch(e => {});
-    });
+  } catch (err) {
+    console.error('Reset Database Error:', err);
+    res.status(500).json({ success: false, message: 'Error communicating with server during reset: ' + err.message });
   }
-
-  writeStore(store);
-
-  res.json({
-    success: true,
-    message: resetType === 'FULL_RESET' ? 'Full platform database reset completed.' : 'Telemetry sessions and exam results cleared successfully.',
-    store
-  });
 });
 
 // 9. Admin Get Student Credentials JSON List

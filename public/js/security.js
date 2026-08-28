@@ -240,13 +240,17 @@ window.SecurityEngine = (function() {
   function handleVisibilityOrBlur(e) {
     if (!isProctorActive || isEnteringFullscreen) return;
 
+    // Suppress events while warning modal is actively displayed
+    const warningModal = document.getElementById('security-warning-modal');
+    if (warningModal && !warningModal.classList.contains('hidden')) return;
+
     if (document.hidden || e.type === 'blur') {
       tabSwitchCount++;
       playWarningSound();
 
       if (tabSwitchCount === 1) {
         reportIncident('TAB_SWITCH', '1st Focus Loss Warning');
-        showWarningModal('Focus Loss Warning (1/1): Browser focus loss detected. A second occurrence will lock your assessment.');
+        showWarningModal('Focus Loss Warning (1/1): Browser focus loss detected. Click "Re-Enter Fullscreen & Resume" below to continue your assessment.');
       } else if (tabSwitchCount >= 2) {
         reportIncident('TAB_SWITCH', '2nd Focus Loss - EXAM SUSPENDED');
         triggerLockout('Assessment access suspended due to repeated focus loss or tab switching.');
@@ -258,6 +262,11 @@ window.SecurityEngine = (function() {
 
   function handleFullscreenChange() {
     if (!isProctorActive || isEnteringFullscreen) return;
+
+    // Suppress events while warning modal is actively displayed
+    const warningModal = document.getElementById('security-warning-modal');
+    if (warningModal && !warningModal.classList.contains('hidden')) return;
+
     const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
     if (!isFs) {
       tabSwitchCount++;
@@ -265,7 +274,7 @@ window.SecurityEngine = (function() {
 
       if (tabSwitchCount === 1) {
         reportIncident('FULLSCREEN_EXIT', '1st Fullscreen Exit Warning');
-        showWarningModal('Security Warning (1/1): Viewport exited Fullscreen mode. A second Fullscreen exit or focus loss will LOCK your assessment.');
+        showWarningModal('Security Warning (1/1): Viewport exited Fullscreen mode. Click "Re-Enter Fullscreen & Resume" below to continue your assessment.');
       } else if (tabSwitchCount >= 2) {
         reportIncident('FULLSCREEN_EXIT', '2nd Fullscreen Exit - EXAM SUSPENDED');
         triggerLockout('Assessment access suspended due to repeated viewport Fullscreen exits.');
@@ -483,15 +492,17 @@ window.SecurityEngine = (function() {
       isProctorActive = false;
       hideWarningModal();
       try {
-        if (document.documentElement.requestFullscreen) {
-          await document.documentElement.requestFullscreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-          await document.documentElement.webkitRequestFullscreen();
+        if (!document.fullscreenElement) {
+          if (document.documentElement.requestFullscreen) {
+            await document.documentElement.requestFullscreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            await document.documentElement.webkitRequestFullscreen();
+          }
         }
       } catch (e) {
         console.warn('Re-enter fullscreen error:', e);
       }
-      await new Promise(r => setTimeout(r, 600));
+      await new Promise(r => setTimeout(r, 1200));
       tabSwitchCount = 0;
       isEnteringFullscreen = false;
       isProctorActive = true;

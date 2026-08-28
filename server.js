@@ -168,29 +168,30 @@ function broadcastToStudent(username, data) {
 
 // Auto-Restore Data from Firebase Firestore on Cold Lambda Container Start
 async function ensureStoreLoaded() {
-  if (globalMemoryStore && Array.isArray(globalMemoryStore.quizzes) && globalMemoryStore.quizzes.length > 0) {
-    return globalMemoryStore;
+  if (!globalMemoryStore) {
+    globalMemoryStore = readStore();
   }
-
-  const store = readStore();
 
   // Auto-pull live data directly from Firebase Firestore
   try {
     const pullResult = await FirebaseService.pullFromFirebase();
     if (pullResult.success && pullResult.data) {
-      if (!globalMemoryStore) globalMemoryStore = store || pullResult.data;
-      if (Array.isArray(pullResult.data.quizzes) && pullResult.data.quizzes.length > 0) {
+      if (Array.isArray(pullResult.data.quizzes)) {
         globalMemoryStore.quizzes = pullResult.data.quizzes;
       }
       if (Array.isArray(pullResult.data.students) && pullResult.data.students.length > 0) {
+        if (!Array.isArray(globalMemoryStore.students)) globalMemoryStore.students = [];
         pullResult.data.students.forEach(s => {
-          if (!globalMemoryStore.students.some(existingS => existingS.id === s.id)) {
+          const idx = globalMemoryStore.students.findIndex(existingS => existingS.id === s.id || (existingS.username && s.username && existingS.username.toLowerCase() === s.username.toLowerCase()));
+          if (idx !== -1) {
+            globalMemoryStore.students[idx] = s;
+          } else {
             globalMemoryStore.students.push(s);
           }
         });
       }
       if (Array.isArray(pullResult.data.results) && pullResult.data.results.length > 0) {
-        if (!globalMemoryStore.results) globalMemoryStore.results = [];
+        if (!Array.isArray(globalMemoryStore.results)) globalMemoryStore.results = [];
         pullResult.data.results.forEach(r => {
           if (!globalMemoryStore.results.some(existingR => existingR.id === r.id)) {
             globalMemoryStore.results.push(r);
@@ -198,13 +199,12 @@ async function ensureStoreLoaded() {
         });
       }
       try { fs.writeFileSync(STORE_PATH, JSON.stringify(globalMemoryStore, null, 2), 'utf8'); } catch (e) {}
-      return globalMemoryStore;
     }
   } catch (e) {
     console.warn('Firebase auto-pull notice:', e.message);
   }
 
-  return store;
+  return globalMemoryStore;
 }
 
 // Global Middleware: Auto-sync from Firebase on serverless cold-start

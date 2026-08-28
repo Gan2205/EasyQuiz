@@ -90,16 +90,8 @@ function readStore() {
   }
 
   // Attempt to write initial store to /tmp if on Vercel
-  if (IS_VERCEL) {
+  if (IS_VERCEL && initialBundledStore) {
     try { fs.writeFileSync(STORE_PATH, JSON.stringify(initialBundledStore, null, 2), 'utf8'); } catch (e) {}
-  }
-
-      const content = fs.readFileSync(STORE_PATH, 'utf8');
-      globalMemoryStore = JSON.parse(content);
-      return globalMemoryStore;
-    }
-  } catch (err) {
-    console.error('Error reading store from disk:', err);
   }
 
   if (initialBundledStore) {

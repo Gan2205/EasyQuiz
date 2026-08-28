@@ -8,6 +8,7 @@ const csvParser = require('csv-parser');
 const cors = require('cors');
 const XLSX = require('xlsx');
 const AdmZip = require('adm-zip');
+const pdfParseModule = require('pdf-parse');
 const FirebaseService = require('./services/firebaseService');
 
 const IS_VERCEL = !!(process.env.VERCEL || process.env.NOW_BUILDER);
@@ -818,18 +819,20 @@ function extractTextFromDocxBuffer(buffer) {
 // PDF Text Stream Cleaner (Uses pdf-parse engine for 100% clean PDF text extraction)
 async function extractTextFromPdfBuffer(buffer) {
   try {
-    const parseFn = typeof pdfParseModule === 'function' ? pdfParseModule : (pdfParseModule.PDFParse || pdfParseModule.default);
-    let text = '';
-    if (typeof parseFn === 'function') {
-      const data = await parseFn(buffer);
-      text = data ? (data.text || '') : '';
-    } else if (pdfParseModule.PDFParse) {
+    if (pdfParseModule && pdfParseModule.PDFParse) {
       const parser = new pdfParseModule.PDFParse({ data: buffer });
-      const data = await parser.getText();
-      text = data ? (data.text || data) : '';
+      const res = await parser.getText();
+      const text = typeof res === 'string' ? res : (res ? (res.text || String(res)) : '');
+      if (text && text.trim().length > 10) {
+        return text;
+      }
     }
-    if (text && text.trim().length > 10) {
-      return text;
+    if (typeof pdfParseModule === 'function') {
+      const res = await pdfParseModule(buffer);
+      const text = typeof res === 'string' ? res : (res ? (res.text || String(res)) : '');
+      if (text && text.trim().length > 10) {
+        return text;
+      }
     }
   } catch (err) {
     console.warn('pdf-parse warning:', err.message);
@@ -908,13 +911,20 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
         line.startsWith('Use these questions to test')) return;
 
     // Single-line PDF Table row item: "1 What is 10 + 15? 20 25 30 35 B" or "1 What is the capital of India? New Delhi Mumbai Chennai Kolkata A"
-    const singleLineTableMatch = line.match(/^(\d+)[\s\.\)]+(.*?[\?:]?)\s+(.+)\s+([A-Da-d1-4])$/);
+    const singleLineTableMatch = line.match(/^(\d+)[\s\.\)]+\s*(.*?\?|\w+[\s\w]+\?|\w+[\s\w]+)\s+(.+)\s+([A-Da-d1-4])$/);
     if (singleLineTableMatch) {
       const qNum = parseInt(singleLineTableMatch[1], 10);
-      const qPrompt = singleLineTableMatch[2].trim();
-      const rawOpts = singleLineTableMatch[3].trim();
+      let qPrompt = singleLineTableMatch[2].trim();
+      let rawOpts = singleLineTableMatch[3].trim();
       const ansChar = singleLineTableMatch[4].trim().toUpperCase();
-      
+
+      // If question prompt ended prematurely, pull question text up to '?'
+      if (!qPrompt.includes('?') && rawOpts.includes('?')) {
+        const qIdx = rawOpts.indexOf('?');
+        qPrompt = qPrompt + ' ' + rawOpts.slice(0, qIdx + 1);
+        rawOpts = rawOpts.slice(qIdx + 1).trim();
+      }
+
       let correctIdx = 0;
       if (ansChar === 'B' || ansChar === '2') correctIdx = 1;
       else if (ansChar === 'C' || ansChar === '3') correctIdx = 2;
@@ -930,6 +940,14 @@ function parseQuestionsFromText(text, optionFormat = 'auto') {
         const parts = rawOpts.split(/\s+/);
         if (parts.length === 4) {
           opts = parts;
+        } else if (parts.length > 4) {
+          const chunkSize = Math.ceil(parts.length / 4);
+          opts = [
+            parts.slice(0, chunkSize).join(' '),
+            parts.slice(chunkSize, chunkSize * 2).join(' '),
+            parts.slice(chunkSize * 2, chunkSize * 3).join(' '),
+            parts.slice(chunkSize * 3).join(' ')
+          ];
         } else {
           opts = [rawOpts, 'N/A', 'N/A', 'N/A'];
         }

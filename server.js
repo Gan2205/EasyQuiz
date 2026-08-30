@@ -737,6 +737,22 @@ app.get(['/api/exam/session-status', '/exam/session-status'], (req, res) => {
   res.json({ success: true, session });
 });
 
+function isSerialNoColumn(keyStr) {
+  if (!keyStr) return false;
+  const lower = keyStr.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return lower === 'sno' || lower === 'slno' || lower === 'serialno' || lower === 'srno' || lower === 'index' || lower === 'no' || lower === 's';
+}
+
+function cleanRegisterNumberValue(val) {
+  if (val === undefined || val === null) return '';
+  let str = String(val).trim();
+  if (typeof val === 'number') {
+    str = val.toLocaleString('fullwide', { useGrouping: false });
+  }
+  str = str.replace(/\.0+$/, '').trim();
+  return str;
+}
+
 function isTimestampVal(val) {
   if (!val) return true;
   const str = String(val).trim();
@@ -773,26 +789,29 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, re
       let name = '';
       let rollNumber = '';
 
-      // 1. First Pass: Match columns specifically by header names
+      // 1. First Pass: Match explicit Register Number / Name column headers (Excluding S.No)
       for (const k of keys) {
+        if (isSerialNoColumn(k)) continue;
+
         const lowerK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-        const val = String(row[k] || '').trim();
+        const val = cleanRegisterNumberValue(row[k]);
 
         if (!val || isTimestampVal(val)) continue;
 
-        if (lowerK.includes('name') || lowerK.includes('student') || lowerK.includes('candidate')) {
-          if (!name) name = val;
-        } else if (lowerK.includes('reg') || lowerK.includes('register') || lowerK.includes('roll') || lowerK.includes('htno') || lowerK.includes('ticket') || lowerK.includes('pin') || lowerK.includes('no') || lowerK.includes('id')) {
+        if (lowerK.includes('register') || lowerK.includes('regno') || lowerK.includes('regnum') || lowerK.includes('roll') || lowerK.includes('htno') || lowerK.includes('ticket') || lowerK.includes('pin') || lowerK.includes('studentid')) {
           if (!rollNumber) rollNumber = val;
+        } else if (lowerK.includes('name') || lowerK.includes('student') || lowerK.includes('candidate')) {
+          if (!name) name = val;
         }
       }
 
-      // 2. Second Pass: Search values for numeric / alphanumeric Register Number (e.g. 99230040791)
+      // 2. Second Pass: Search for long numeric Register Numbers (like 99230040782, 99230040521)
       if (!rollNumber) {
         for (const k of keys) {
-          const val = String(row[k] || '').trim();
+          if (isSerialNoColumn(k)) continue;
+          const val = cleanRegisterNumberValue(row[k]);
           if (val && !isTimestampVal(val) && val !== name) {
-            if (/^[A-Za-z0-9\-_]{4,}$/.test(val) && (/\d/.test(val) || val.toUpperCase() === val)) {
+            if (/^\d{5,}$/.test(val) || (/^[A-Za-z0-9\-_]{5,}$/.test(val) && /\d/.test(val))) {
               rollNumber = val;
               break;
             }
@@ -800,11 +819,12 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, re
         }
       }
 
-      // 3. Fallback for candidate name
+      // 3. Fallback for Candidate Name
       if (!name) {
         for (const k of keys) {
-          const val = String(row[k] || '').trim();
-          if (val && !isTimestampVal(val) && val !== rollNumber) {
+          if (isSerialNoColumn(k)) continue;
+          const val = cleanRegisterNumberValue(row[k]);
+          if (val && !isTimestampVal(val) && val !== rollNumber && !/^\d+$/.test(val)) {
             name = val;
             break;
           }
@@ -812,7 +832,7 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, re
       }
 
       if (name && name !== 'undefined' && name !== 'null') {
-        if (!rollNumber || isTimestampVal(rollNumber)) {
+        if (!rollNumber || isTimestampVal(rollNumber) || rollNumber.length < 3) {
           rollNumber = `REG-${Math.floor(100000 + Math.random() * 900000)}`;
         }
         rawRows.push({ name, rollNumber });
@@ -823,7 +843,7 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, re
     const newCredentials = [];
 
     rawRows.forEach(item => {
-      const cleanRoll = (item.rollNumber || '').trim();
+      const cleanRoll = cleanRegisterNumberValue(item.rollNumber);
       const cleanReg = cleanRoll.split('@')[0].trim();
       const targetUsername = cleanReg.toLowerCase();
 

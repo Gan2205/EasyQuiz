@@ -118,10 +118,14 @@ async function writeStore(data) {
     globalMemoryStore = data;
     initialBundledStore = data;
     try { fs.writeFileSync(STORE_PATH, JSON.stringify(data, null, 2), 'utf8'); } catch (e) {}
-    // Synchronously await Neon PostgreSQL write so Vercel never freezes pending updates
-    await NeonService.syncToNeon(data);
+    if (IS_VERCEL) {
+      await NeonService.syncToNeon(data);
+    } else {
+      // Async background sync so concurrent candidate requests return immediately
+      NeonService.syncToNeon(data).catch(err => console.error('Background Neon Sync Error:', err.message));
+    }
   } catch (err) {
-    console.error('Error writing store to Neon:', err);
+    console.error('Error writing store:', err);
   }
 }
 
@@ -172,15 +176,24 @@ function broadcastToStudent(username, data) {
   }
 }
 
-// Auto-Restore Data from Neon Serverless PostgreSQL on Cold Lambda Container Start
-async function ensureStoreLoaded() {
+let lastNeonPullTime = 0;
+
+async function ensureStoreLoaded(force = false) {
   if (!globalMemoryStore) {
     globalMemoryStore = readStore();
   }
 
-  // Auto-pull live data directly from Neon PostgreSQL
+  const now = Date.now();
+  if (!force && lastNeonPullTime && (now - lastNeonPullTime < 10000)) {
+    return globalMemoryStore;
+  }
+  lastNeonPullTime = now;
+
+  // Auto-pull live data directly from Neon PostgreSQL with 1.5s resilience timeout
   try {
-    const pullResult = await NeonService.pullFromNeon();
+    const pullPromise = NeonService.pullFromNeon();
+    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve({ success: false, timeout: true }), 1500));
+    const pullResult = await Promise.race([pullPromise, timeoutPromise]);
     if (pullResult && pullResult.success && pullResult.data) {
       // Merge quizzes safely
       if (Array.isArray(pullResult.data.quizzes) && pullResult.data.quizzes.length > 0) {
@@ -745,25 +758,24 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, re
     try { fs.unlinkSync(filePath); } catch (e) {}
 
     rows.forEach(row => {
-      // Flexibly extract student Name and Roll Number from row keys
       const keys = Object.keys(row);
       let name = '';
       let rollNumber = '';
 
-      // Check common column names
+      // Prioritize Register / Roll Number column identification
       for (const k of keys) {
         const lowerK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-        if (lowerK.includes('name') || lowerK.includes('student')) {
-          name = String(row[k]).trim();
-        } else if (lowerK.includes('roll') || lowerK.includes('id') || lowerK.includes('email') || lowerK.includes('reg')) {
+        if (lowerK.includes('reg') || lowerK.includes('register') || lowerK.includes('roll') || lowerK.includes('htno') || lowerK.includes('ticket') || lowerK.includes('id')) {
           rollNumber = String(row[k]).trim();
+        } else if (lowerK.includes('name') || lowerK.includes('student') || lowerK.includes('candidate')) {
+          name = String(row[k]).trim();
         }
       }
 
-      // Fallbacks if header names differ
+      // Fallbacks if headers are unlabelled
       if (!name && keys.length >= 1) name = String(row[keys[0]]).trim();
       if (!rollNumber && keys.length >= 2) rollNumber = String(row[keys[1]]).trim();
-      if (!rollNumber) rollNumber = `REG-${Math.floor(1000 + Math.random() * 9000)}`;
+      if (!rollNumber) rollNumber = `REG-${Math.floor(10000 + Math.random() * 90000)}`;
 
       if (name && name !== 'undefined' && name !== 'null') {
         rawRows.push({ name, rollNumber });
@@ -774,44 +786,37 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, re
     const newCredentials = [];
 
     rawRows.forEach(item => {
-      const cleanRoll = (item.rollNumber || '').trim().toLowerCase();
-      const cleanReg = cleanRoll.split('@')[0];
+      const cleanRoll = (item.rollNumber || '').trim();
+      const cleanReg = cleanRoll.split('@')[0].trim();
+      const targetUsername = cleanReg.toLowerCase();
 
-      // Check if candidate already exists in store by Register Number or Roll Number
+      // Check if candidate already exists by Register Number / Roll Number or Username
       const existingStudent = (store.students || []).find(s => {
         const sRoll = (s.rollNumber || '').trim().toLowerCase();
         const sReg = sRoll.split('@')[0];
-        return sRoll === cleanRoll || (cleanReg && sReg === cleanReg);
+        const sUser = (s.username || '').trim().toLowerCase();
+        return sRoll === targetUsername || sReg === targetUsername || sUser === targetUsername;
       });
 
       if (existingStudent) {
-        // Update existing candidate details without creating duplicates or changing username
+        // Update existing candidate details and sync username to Register Number
         existingStudent.name = item.name;
-        existingStudent.rollNumber = item.rollNumber;
+        existingStudent.rollNumber = cleanRoll;
+        existingStudent.username = targetUsername;
         newCredentials.push(existingStudent);
       } else {
-        // Create new unique candidate
-        const sanitizedName = item.name.toLowerCase().replace(/[^a-z0-9]/g, '.').replace(/\.+/g, '.');
-        let baseUsername = sanitizedName;
-        if (baseUsername.length < 3) baseUsername = `candidate.${cleanReg.replace(/[^a-z0-9]/g, '')}`;
-
-        let finalUsername = baseUsername;
-        let count = 1;
-        while ((store.students || []).some(s => s.username === finalUsername)) {
-          finalUsername = `${baseUsername}.${count}`;
-          count++;
-        }
-
+        // Create candidate with Username set directly to Register Number / Roll Number
         const generatedPassword = generatePassword(8);
         const studentObj = {
-          id: 'stu-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          id: 'stu-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
           name: item.name,
-          rollNumber: item.rollNumber,
-          username: finalUsername,
+          rollNumber: cleanRoll,
+          username: targetUsername, // Username is candidate's Register Number
           password: generatedPassword,
           createdAt: new Date().toISOString()
         };
 
+        if (!Array.isArray(store.students)) store.students = [];
         store.students.push(studentObj);
         newCredentials.push(studentObj);
       }

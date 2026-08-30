@@ -737,6 +737,17 @@ app.get(['/api/exam/session-status', '/exam/session-status'], (req, res) => {
   res.json({ success: true, session });
 });
 
+function isTimestampVal(val) {
+  if (!val) return true;
+  const str = String(val).trim();
+  if (str.length < 3) return false;
+  if (/\d{1,4}[\/\.-]\d{1,2}[\/\.-]\d{1,4}/.test(str)) return true;
+  if (/\d{1,2}:\d{2}/.test(str)) return true;
+  if (/\b(AM|PM)\b/i.test(str)) return true;
+  if (/timestamp|created|time|date/i.test(str)) return true;
+  return false;
+}
+
 // 8. Admin Upload Excel / CSV Roster & Auto-Generate Credentials
 app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, res) => {
   if (!req.file) {
@@ -762,22 +773,48 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, re
       let name = '';
       let rollNumber = '';
 
-      // Prioritize Register / Roll Number column identification
+      // 1. First Pass: Match columns specifically by header names
       for (const k of keys) {
         const lowerK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-        if (lowerK.includes('reg') || lowerK.includes('register') || lowerK.includes('roll') || lowerK.includes('htno') || lowerK.includes('ticket') || lowerK.includes('id')) {
-          rollNumber = String(row[k]).trim();
-        } else if (lowerK.includes('name') || lowerK.includes('student') || lowerK.includes('candidate')) {
-          name = String(row[k]).trim();
+        const val = String(row[k] || '').trim();
+
+        if (!val || isTimestampVal(val)) continue;
+
+        if (lowerK.includes('name') || lowerK.includes('student') || lowerK.includes('candidate')) {
+          if (!name) name = val;
+        } else if (lowerK.includes('reg') || lowerK.includes('register') || lowerK.includes('roll') || lowerK.includes('htno') || lowerK.includes('ticket') || lowerK.includes('pin') || lowerK.includes('no') || lowerK.includes('id')) {
+          if (!rollNumber) rollNumber = val;
         }
       }
 
-      // Fallbacks if headers are unlabelled
-      if (!name && keys.length >= 1) name = String(row[keys[0]]).trim();
-      if (!rollNumber && keys.length >= 2) rollNumber = String(row[keys[1]]).trim();
-      if (!rollNumber) rollNumber = `REG-${Math.floor(10000 + Math.random() * 90000)}`;
+      // 2. Second Pass: Search values for numeric / alphanumeric Register Number (e.g. 99230040791)
+      if (!rollNumber) {
+        for (const k of keys) {
+          const val = String(row[k] || '').trim();
+          if (val && !isTimestampVal(val) && val !== name) {
+            if (/^[A-Za-z0-9\-_]{4,}$/.test(val) && (/\d/.test(val) || val.toUpperCase() === val)) {
+              rollNumber = val;
+              break;
+            }
+          }
+        }
+      }
+
+      // 3. Fallback for candidate name
+      if (!name) {
+        for (const k of keys) {
+          const val = String(row[k] || '').trim();
+          if (val && !isTimestampVal(val) && val !== rollNumber) {
+            name = val;
+            break;
+          }
+        }
+      }
 
       if (name && name !== 'undefined' && name !== 'null') {
+        if (!rollNumber || isTimestampVal(rollNumber)) {
+          rollNumber = `REG-${Math.floor(100000 + Math.random() * 900000)}`;
+        }
         rawRows.push({ name, rollNumber });
       }
     });
@@ -799,19 +836,17 @@ app.post('/api/admin/upload-roster', upload.single('rosterFile'), async (req, re
       });
 
       if (existingStudent) {
-        // Update existing candidate details and sync username to Register Number
         existingStudent.name = item.name;
         existingStudent.rollNumber = cleanRoll;
         existingStudent.username = targetUsername;
         newCredentials.push(existingStudent);
       } else {
-        // Create candidate with Username set directly to Register Number / Roll Number
         const generatedPassword = generatePassword(8);
         const studentObj = {
           id: 'stu-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
           name: item.name,
           rollNumber: cleanRoll,
-          username: targetUsername, // Username is candidate's Register Number
+          username: targetUsername,
           password: generatedPassword,
           createdAt: new Date().toISOString()
         };
